@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 2/8/2016
+ * Last update - 2/9/2016
  */
 
 using UnityEngine;
@@ -147,6 +147,18 @@ public class PlayerCarController : MonoBehaviour {
 			}
 		}
 
+	}
+
+	public float getMotorTorque() {
+		return leftCollider.motorTorque;
+	}
+
+	public float getSteerAngle() {
+		return leftCollider.steerAngle;
+	}
+
+	public GameObject[] getAllWheels() {
+		return new GameObject[4] { frontLeftWheel, frontRightWheel, rearLeftWheel, rearRightWheel };
 	}
 		
 }

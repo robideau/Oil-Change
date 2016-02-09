@@ -3,7 +3,7 @@
  * 
  * This script handles recording of driver "ghost" data to be used during play mode.
  *
- * Last update - 2/8/2016
+ * Last update - 2/9/2016
  */
 
 using UnityEngine;
@@ -52,7 +52,7 @@ public class GhostRecorder : MonoBehaviour {
 
 		//If ghost is currently replaying
 		if (getIsReplaying () && currentFrame < recordingCount-1) {
-			ghostBody.transform.position = positionData [currentFrame];
+			ghostBody.transform.position = new Vector3 (positionData [currentFrame].x, carBody.transform.position.y, positionData[currentFrame].z);
 			ghostBody.transform.rotation = rotationData [currentFrame];
 		}
 
@@ -68,7 +68,7 @@ public class GhostRecorder : MonoBehaviour {
 	public void replayGhost() {
 		ghostBody = Instantiate (carBody);
 		ghostBody.GetComponent<BoxCollider> ().enabled = false;
-		ghostBody.transform.position = initialTransform.position;
+		ghostBody.transform.position = new Vector3 (initialTransform.position.x, carBody.transform.position.y, initialTransform.position.z);
 		ghostBody.transform.rotation = initialTransform.rotation;
 		setIsReplaying (true);
 		currentFrame = 0;

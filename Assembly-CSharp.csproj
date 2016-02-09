@@ -47,6 +47,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\PlayerCar\GhostRecorder.cs" />
      <Compile Include="Assets\Scripts\PlayerCar\PlayerCarController.cs" />
+     <Compile Include="Assets\Scripts\PlayerCar\WheelAnimator.cs" />
      <Compile Include="Assets\Scripts\cameraControll.cs" />
      <Compile Include="Assets\Scripts\playerController.cs" />
  <Reference Include="UnityEngine.UI">
