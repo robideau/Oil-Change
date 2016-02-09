@@ -23,11 +23,14 @@ public class buildCameraController : MonoBehaviour {
 			float mouseHorizontal = Input.GetAxis("Mouse X");
 			float mouseVertical = Input.GetAxis("Mouse Y");
 
-			transform.Rotate(-mouseVertical*vRotate, mouseHorizontal*hRotate, 0.0f);
+			// Vertical Tilt relative to camera direction
+			transform.Rotate(-mouseVertical*vRotate, 0.0f, 0.0f);
+			// Horizontal Rotate relative to world
+			transform.Rotate(0.0f, mouseHorizontal*hRotate, 0.0f, Space.World);
 		}
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
-		transform.Translate(moveHorizontal*speed , 0.0f, moveVertical*speed);
+		transform.Translate(moveHorizontal*speed*0.2f , 0.0f, moveVertical*speed*0.2f);
 	}
 }
