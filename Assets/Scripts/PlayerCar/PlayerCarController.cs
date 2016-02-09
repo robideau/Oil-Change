@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 2/5/2016
+ * Last update - 2/8/2016
  */
 
 using UnityEngine;
@@ -20,8 +20,13 @@ public class PlayerCarController : MonoBehaviour {
 	public GameObject rearRightWheel;
 	private Axle[] axles = new Axle[2];
 
+	//References to other scripts
+	public GhostRecorder ghostRecorder;
+
 	//Car control options
 	public bool frontWheelDrive;
+	private bool movementEnabled;
+	private bool ghostReplaying;
 
 	//Speed and turn resistance paramteters
 	public float steerIncrements;
@@ -33,6 +38,9 @@ public class PlayerCarController : MonoBehaviour {
 	//Simplified wheel references for use only in script
 	private GameObject relativeLeftWheel;
 	private GameObject relativeRightWheel;
+	private WheelCollider rightCollider;
+	private WheelCollider leftCollider;
+
 
 	void Start () {
 
@@ -48,75 +56,95 @@ public class PlayerCarController : MonoBehaviour {
 			if (axle.isDriveAxis ()) {
 				relativeLeftWheel = axle.getLeftWheel ();
 				relativeRightWheel = axle.getRightWheel ();
+				leftCollider = relativeLeftWheel.GetComponent<WheelCollider> ();
+				rightCollider = relativeRightWheel.GetComponent<WheelCollider> ();
 			}
 		}
+
+		movementEnabled = true;
 			
 	}
 
 	void Update () {
 
-		//W pressed but not S
-		if (Input.GetKey ("w") && !Input.GetKey ("s")) {
-			//While torque value is below maximum, apply more (incr. acceleration)
-			if (relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque < maxForwardTorque) {
-				relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque = maxForwardTorque * Input.GetAxis ("Vertical") * 2;
-				relativeRightWheel.GetComponent<WheelCollider> ().motorTorque = maxForwardTorque * Input.GetAxis ("Vertical") * 2;
-			}
-		}
+		/* PLAYER CONTROL HANDLING */
 
-		if (Input.GetKey ("s") && !Input.GetKey ("w")) {
-			//While torque value is above negative maximum, apply more (inr. negative acceleration)
-			if (relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque > -maxBackwardTorque) {
-				relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque += maxBackwardTorque * Input.GetAxis("Vertical") * 2;
-				relativeRightWheel.GetComponent<WheelCollider> ().motorTorque += maxBackwardTorque * Input.GetAxis("Vertical") * 2;
-			}
-		}
+		if (movementEnabled) {
 
-		//Right turn
-		if (Input.GetKey ("d")) {
-			if (relativeLeftWheel.GetComponent<WheelCollider> ().steerAngle < maxTurnAngle) {
-				relativeLeftWheel.GetComponent<WheelCollider> ().steerAngle += steerIncrements;
-				relativeRightWheel.GetComponent<WheelCollider> ().steerAngle += steerIncrements;
-			}
-		}
-
-		//Left turn
-		if (Input.GetKey ("a")) {
-			if (relativeRightWheel.GetComponent<WheelCollider> ().steerAngle > -maxTurnAngle) {
-				relativeLeftWheel.GetComponent<WheelCollider> ().steerAngle -= steerIncrements;
-				relativeRightWheel.GetComponent<WheelCollider> ().steerAngle -= steerIncrements;
-			}
-		}
-
-		//If no acceleration input, decelerate
-		if (!Input.GetKey ("w") && !Input.GetKey ("s")) {
-			relativeLeftWheel.GetComponent<WheelCollider> ().brakeTorque = maxBrakeTorque;
-			relativeRightWheel.GetComponent<WheelCollider> ().brakeTorque = maxBrakeTorque;
-			if (relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque > 0) {
-				relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque -= maxForwardTorque * 2;
-				relativeRightWheel.GetComponent<WheelCollider> ().motorTorque -= maxForwardTorque * 2;
-				if (relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque < 0) {
-					relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque = 0;
-					relativeRightWheel.GetComponent<WheelCollider> ().motorTorque = 0;
+			//Accelerate
+			if (Input.GetKey ("w") && !Input.GetKey ("s")) {
+				//While torque value is below maximum, apply more (incr. acceleration)
+				if (leftCollider.motorTorque < maxForwardTorque) {
+					leftCollider.motorTorque = maxForwardTorque * Input.GetAxis ("Vertical") * 2;
+					rightCollider.motorTorque = maxForwardTorque * Input.GetAxis ("Vertical") * 2;
 				}
 			}
-			if (relativeRightWheel.GetComponent<WheelCollider> ().motorTorque < 0) {
-				relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque += maxForwardTorque * 2;
-				relativeRightWheel.GetComponent<WheelCollider> ().motorTorque += maxForwardTorque * 2;
-				if (relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque > 0) {
-					relativeLeftWheel.GetComponent<WheelCollider> ().motorTorque = 0;
-					relativeRightWheel.GetComponent<WheelCollider> ().motorTorque = 0;
+
+			//Brake, reverse acceleration
+			if (Input.GetKey ("s") && !Input.GetKey ("w")) {
+				//While torque value is above negative maximum, apply more (inr. negative acceleration)
+				if (leftCollider.motorTorque > -maxBackwardTorque) {
+					leftCollider.motorTorque += maxBackwardTorque * Input.GetAxis ("Vertical") * 2;
+					rightCollider.motorTorque += maxBackwardTorque * Input.GetAxis ("Vertical") * 2;
 				}
 			}
-		} else {
-			relativeLeftWheel.GetComponent<WheelCollider> ().brakeTorque = 0;
-			relativeRightWheel.GetComponent<WheelCollider> ().brakeTorque = 0;
+
+			//Right turn
+			if (Input.GetKey ("d")) {
+				if (leftCollider.steerAngle < maxTurnAngle) {
+					leftCollider.steerAngle += steerIncrements;
+					rightCollider.steerAngle += steerIncrements;
+				}
+			}
+
+			//Left turn
+			if (Input.GetKey ("a")) {
+				if (rightCollider.steerAngle > -maxTurnAngle) {
+					leftCollider.steerAngle -= steerIncrements;
+					rightCollider.steerAngle -= steerIncrements;
+				}
+			}
+
+			//If no acceleration input, decelerate
+			if (!Input.GetKey ("w") && !Input.GetKey ("s")) {
+				leftCollider.brakeTorque = maxBrakeTorque;
+				rightCollider.brakeTorque = maxBrakeTorque;
+				if (leftCollider.motorTorque > 0) {
+					leftCollider.motorTorque -= maxForwardTorque * 2;
+					rightCollider.motorTorque -= maxForwardTorque * 2;
+					if (leftCollider.motorTorque < 0) {
+						leftCollider.motorTorque = 0;
+						rightCollider.motorTorque = 0;
+					}
+				}
+				if (rightCollider.motorTorque < 0) {
+					leftCollider.motorTorque += maxForwardTorque * 2;
+					rightCollider.motorTorque += maxForwardTorque * 2;
+					if (leftCollider.motorTorque > 0) {
+						leftCollider.motorTorque = 0;
+						rightCollider.motorTorque = 0;
+					}
+				}
+			} else {
+				leftCollider.brakeTorque = 0;
+				rightCollider.brakeTorque = 0;
+			}
+
+			//If no turn being made, maintain steering angle
+			if (!Input.GetKey ("a") && !Input.GetKey ("d")) {
+				leftCollider.steerAngle = 0;
+				rightCollider.steerAngle = 0;
+			}
+		
 		}
 
-		//If no turn being made, maintain steering angle
-		if (!Input.GetKey ("a") && !Input.GetKey ("d")) {
-			relativeLeftWheel.GetComponent<WheelCollider> ().steerAngle = 0;
-			relativeRightWheel.GetComponent<WheelCollider> ().steerAngle = 0;
+		//Temporary control - stop player car movement and replay ghost data
+		if (!ghostRecorder.getIsReplaying()) {
+			if (Input.GetKey ("g")) {
+				movementEnabled = false;
+				ghostRecorder.setIsRecording (false);
+				ghostRecorder.replayGhost ();
+			}
 		}
 
 	}
