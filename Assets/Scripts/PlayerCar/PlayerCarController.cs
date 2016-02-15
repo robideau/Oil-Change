@@ -26,6 +26,7 @@ public class PlayerCarController : MonoBehaviour {
 	//Car control options
 	public bool frontWheelDrive; 
 	public bool shortResetEnabled;
+	public bool fullResetEnabled;
 	public int shortResetFrequency;
 	private bool movementEnabled;
 	private bool ghostReplaying;
@@ -147,6 +148,12 @@ public class PlayerCarController : MonoBehaviour {
 					carBase.GetComponent<Rigidbody> ().velocity = new Vector3(0, 0, 0);
 					previousShortReset = System.DateTime.Now.Second;
 				}
+			}
+
+			//Full reset - reset to initial position and rotation
+			if (Input.GetKeyDown ("r") && fullResetEnabled) {
+				carBase.transform.position = ghostRecorder.getInitialTransform ().position;
+				carBase.transform.rotation = ghostRecorder.getInitialTransform ().rotation;
 			}
 		
 		}
