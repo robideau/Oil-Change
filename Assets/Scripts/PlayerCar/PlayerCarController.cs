@@ -152,8 +152,9 @@ public class PlayerCarController : MonoBehaviour {
 
 			//Full reset - reset to initial position and rotation
 			if (Input.GetKeyDown ("r") && fullResetEnabled) {
-				carBase.transform.position = ghostRecorder.getInitialTransform ().position;
-				carBase.transform.rotation = ghostRecorder.getInitialTransform ().rotation;
+				carBase.transform.position = ghostRecorder.getFramePosition (0);
+				carBase.transform.rotation = ghostRecorder.getFrameRotation (0);
+				carBase.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
 			}
 		
 		}
