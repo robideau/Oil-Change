@@ -24,9 +24,12 @@ public class PlayerCarController : MonoBehaviour {
 	public GhostRecorder ghostRecorder;
 
 	//Car control options
-	public bool frontWheelDrive;
+	public bool frontWheelDrive; 
+	public bool shortResetEnabled;
+	public int shortResetFrequency;
 	private bool movementEnabled;
 	private bool ghostReplaying;
+	private int previousShortReset = 0;
 
 	//Speed and turn resistance paramteters
 	public float steerIncrements;
@@ -134,6 +137,16 @@ public class PlayerCarController : MonoBehaviour {
 			if (!Input.GetKey ("a") && !Input.GetKey ("d")) {
 				leftCollider.steerAngle = 0;
 				rightCollider.steerAngle = 0;
+			}
+
+			//Short reset - reset 5 seconds if no reset has been performed in a certain amount of time
+			if (Input.GetKeyDown ("f") && shortResetEnabled) {
+				if (System.DateTime.Now.Second - previousShortReset >= shortResetFrequency) {
+					carBase.transform.position = ghostRecorder.getFramePosition (ghostRecorder.getRecordingCount () - (1000 * ghostRecorder.recordingIntervals));
+					carBase.transform.rotation = ghostRecorder.getFrameRotation (ghostRecorder.getRecordingCount () - (1000 * ghostRecorder.recordingIntervals));
+					carBase.GetComponent<Rigidbody> ().velocity = new Vector3(0, 0, 0);
+					previousShortReset = System.DateTime.Now.Second;
+				}
 			}
 		
 		}

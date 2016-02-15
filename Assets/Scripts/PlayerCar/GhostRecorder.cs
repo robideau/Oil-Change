@@ -52,7 +52,7 @@ public class GhostRecorder : MonoBehaviour {
 
 		//If ghost is currently replaying
 		if (getIsReplaying () && currentFrame < recordingCount-1) {
-			ghostBody.transform.position = new Vector3 (positionData [currentFrame].x, carBody.transform.position.y, positionData[currentFrame].z);
+			ghostBody.transform.position = new Vector3 (positionData [currentFrame].x, positionData[currentFrame].y + .5f, positionData[currentFrame].z);
 			ghostBody.transform.rotation = rotationData [currentFrame];
 		}
 
@@ -68,7 +68,7 @@ public class GhostRecorder : MonoBehaviour {
 	public void replayGhost() {
 		ghostBody = Instantiate (carBody);
 		ghostBody.GetComponent<BoxCollider> ().enabled = false;
-		ghostBody.transform.position = new Vector3 (initialTransform.position.x, carBody.transform.position.y, initialTransform.position.z);
+		ghostBody.transform.position = new Vector3 (initialTransform.position.x, initialTransform.transform.position.y + .5f, initialTransform.position.z);
 		ghostBody.transform.rotation = initialTransform.rotation;
 		setIsReplaying (true);
 		currentFrame = 0;
@@ -88,5 +88,29 @@ public class GhostRecorder : MonoBehaviour {
 
 	public bool getIsReplaying() {
 		return isReplaying;
+	}
+
+	public Vector3 getFramePosition(int frameNumber) {
+		if (frameNumber < recordingCount && frameNumber >= 0) {
+			return positionData [frameNumber];
+		} else {
+			return positionData [0];
+		}
+	}
+
+	public Quaternion getFrameRotation(int frameNumber) {
+		if (frameNumber < recordingCount && frameNumber >= 0) {
+			return rotationData [frameNumber];
+		} else {
+			return rotationData [0];
+		}
+	}
+
+	public Transform getInitialTransform() {
+		return initialTransform;
+	}
+
+	public int getRecordingCount() {
+		return recordingCount;
 	}
 }
