@@ -19,6 +19,7 @@ public class PlayerCarController : MonoBehaviour {
 	public GameObject rearLeftWheel;
 	public GameObject rearRightWheel;
 	private Axle[] axles = new Axle[2];
+	public GameObject cameraRig;
 
 	//References to other scripts
 	public GhostRecorder ghostRecorder;
@@ -27,10 +28,12 @@ public class PlayerCarController : MonoBehaviour {
 	public bool frontWheelDrive; 
 	public bool shortResetEnabled;
 	public bool fullResetEnabled;
+	public bool cameraControlEnabled;
 	public int shortResetFrequency;
 	private bool movementEnabled;
 	private bool ghostReplaying;
 	private int previousShortReset = 0;
+	private int activeCamera = 0;
 
 	//Speed and turn resistance paramteters
 	public float steerIncrements;
@@ -161,10 +164,23 @@ public class PlayerCarController : MonoBehaviour {
 
 		//Temporary control - stop player car movement and replay ghost data
 		if (!ghostRecorder.getIsReplaying()) {
-			if (Input.GetKey ("g")) {
+			if (Input.GetKeyDown ("g")) {
 				movementEnabled = false;
 				ghostRecorder.setIsRecording (false);
 				ghostRecorder.replayGhost ();
+			}
+		}
+
+		//Camera control - switch between multiple perspectives
+		if (cameraControlEnabled && Input.GetKeyDown("c")) {
+			if (activeCamera < cameraRig.transform.childCount-1) {
+				activeCamera++;
+				cameraRig.transform.GetChild (activeCamera - 1).gameObject.SetActive (false); //turn off old cam
+				cameraRig.transform.GetChild (activeCamera).gameObject.SetActive (true); //turn on new cam
+			} else {
+				cameraRig.transform.GetChild (activeCamera).gameObject.SetActive (false); //turn off old cam
+				activeCamera = 0;
+				cameraRig.transform.GetChild (activeCamera).gameObject.SetActive (true); //turn on default cam
 			}
 		}
 
