@@ -142,11 +142,11 @@ public class PlayerCarController : MonoBehaviour {
 
 			//Short reset - reset 5 seconds if no reset has been performed in a certain amount of time
 			if (Input.GetKeyDown ("f") && shortResetEnabled) {
-				if (System.DateTime.Now.Second - previousShortReset >= shortResetFrequency) {
+				if (Time.frameCount - previousShortReset >= shortResetFrequency) {
 					carBase.transform.position = ghostRecorder.getFramePosition (ghostRecorder.getRecordingCount () - (1000 * ghostRecorder.recordingIntervals));
 					carBase.transform.rotation = ghostRecorder.getFrameRotation (ghostRecorder.getRecordingCount () - (1000 * ghostRecorder.recordingIntervals));
 					carBase.GetComponent<Rigidbody> ().velocity = new Vector3(0, 0, 0);
-					previousShortReset = System.DateTime.Now.Second;
+					previousShortReset = Time.frameCount;
 				}
 			}
 
