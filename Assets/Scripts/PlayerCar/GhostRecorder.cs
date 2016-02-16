@@ -3,7 +3,7 @@
  * 
  * This script handles recording of driver "ghost" data to be used during play mode.
  *
- * Last update - 2/9/2016
+ * Last update - 2/15/2016
  */
 
 using UnityEngine;
