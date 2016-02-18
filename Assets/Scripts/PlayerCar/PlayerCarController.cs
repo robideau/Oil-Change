@@ -34,6 +34,8 @@ public class PlayerCarController : MonoBehaviour {
 	private bool ghostReplaying;
 	private int previousShortReset = 0;
 	private int activeCamera = 0;
+	public bool displayControls;
+	public PlayerControlScheme controlScheme;
 
 	//Speed and turn resistance paramteters
 	public float steerIncrements;
@@ -68,6 +70,10 @@ public class PlayerCarController : MonoBehaviour {
 			}
 		}
 
+		if (displayControls) {
+			controlScheme.displayControls ();
+		}
+
 		movementEnabled = true;
 			
 	}
@@ -79,7 +85,7 @@ public class PlayerCarController : MonoBehaviour {
 		if (movementEnabled) {
 
 			//Accelerate
-			if (Input.GetKey ("w") && !Input.GetKey ("s")) {
+			if (Input.GetKey (controlScheme.accelerate) && !Input.GetKey (controlScheme.decelerate)) {
 				//While torque value is below maximum, apply more (incr. acceleration)
 				if (leftCollider.motorTorque < maxForwardTorque) {
 					leftCollider.motorTorque = maxForwardTorque * Input.GetAxis ("Vertical") * 2;
@@ -88,7 +94,7 @@ public class PlayerCarController : MonoBehaviour {
 			}
 
 			//Brake, reverse acceleration
-			if (Input.GetKey ("s") && !Input.GetKey ("w")) {
+			if (Input.GetKey (controlScheme.decelerate) && !Input.GetKey (controlScheme.accelerate)) {
 				//While torque value is above negative maximum, apply more (inr. negative acceleration)
 				if (leftCollider.motorTorque > -maxBackwardTorque) {
 					leftCollider.motorTorque += maxBackwardTorque * Input.GetAxis ("Vertical") * 2;
@@ -97,7 +103,7 @@ public class PlayerCarController : MonoBehaviour {
 			}
 
 			//Right turn
-			if (Input.GetKey ("d")) {
+			if (Input.GetKey (controlScheme.turnRight)) {
 				if (leftCollider.steerAngle < maxTurnAngle) {
 					leftCollider.steerAngle += steerIncrements;
 					rightCollider.steerAngle += steerIncrements;
@@ -105,7 +111,7 @@ public class PlayerCarController : MonoBehaviour {
 			}
 
 			//Left turn
-			if (Input.GetKey ("a")) {
+			if (Input.GetKey (controlScheme.turnLeft)) {
 				if (rightCollider.steerAngle > -maxTurnAngle) {
 					leftCollider.steerAngle -= steerIncrements;
 					rightCollider.steerAngle -= steerIncrements;
@@ -113,7 +119,7 @@ public class PlayerCarController : MonoBehaviour {
 			}
 
 			//If no acceleration input, decelerate
-			if (!Input.GetKey ("w") && !Input.GetKey ("s")) {
+			if (!Input.GetKey (controlScheme.accelerate) && !Input.GetKey (controlScheme.decelerate)) {
 				leftCollider.brakeTorque = maxBrakeTorque;
 				rightCollider.brakeTorque = maxBrakeTorque;
 				if (leftCollider.motorTorque > 0) {
@@ -138,13 +144,13 @@ public class PlayerCarController : MonoBehaviour {
 			}
 
 			//If no turn being made, maintain steering angle
-			if (!Input.GetKey ("a") && !Input.GetKey ("d")) {
+			if (!Input.GetKey (controlScheme.turnLeft) && !Input.GetKey (controlScheme.turnRight)) {
 				leftCollider.steerAngle = 0;
 				rightCollider.steerAngle = 0;
 			}
 
 			//Short reset - reset 5 seconds if no reset has been performed in a certain amount of time
-			if (Input.GetKeyDown ("f") && shortResetEnabled) {
+			if (Input.GetKeyDown (controlScheme.shortReset) && shortResetEnabled) {
 				if (Time.frameCount - previousShortReset >= shortResetFrequency) {
 					carBase.transform.position = ghostRecorder.getFramePosition (ghostRecorder.getRecordingCount () - (1000 * ghostRecorder.recordingIntervals));
 					carBase.transform.rotation = ghostRecorder.getFrameRotation (ghostRecorder.getRecordingCount () - (1000 * ghostRecorder.recordingIntervals));
@@ -154,7 +160,7 @@ public class PlayerCarController : MonoBehaviour {
 			}
 
 			//Full reset - reset to initial position and rotation
-			if (Input.GetKeyDown ("r") && fullResetEnabled) {
+			if (Input.GetKeyDown (controlScheme.fullReset) && fullResetEnabled) {
 				fullReset();
 			}
 		
@@ -162,7 +168,7 @@ public class PlayerCarController : MonoBehaviour {
 
 		//Temporary control - stop player car movement and replay ghost data
 		if (!ghostRecorder.getIsReplaying()) {
-			if (Input.GetKeyDown ("g")) {
+			if (Input.GetKeyDown (controlScheme.replayGhost)) {
 				movementEnabled = false;
 				ghostRecorder.setIsRecording (false);
 				ghostRecorder.replayGhost ();
@@ -170,7 +176,7 @@ public class PlayerCarController : MonoBehaviour {
 		}
 
 		//Camera control - switch between multiple perspectives
-		if (cameraControlEnabled && Input.GetKeyDown("c")) {
+		if (cameraControlEnabled && Input.GetKeyDown(controlScheme.cameraControl)) {
 			if (activeCamera < cameraRig.transform.childCount-1) {
 				activeCamera++;
 				cameraRig.transform.GetChild (activeCamera - 1).gameObject.SetActive (false); //turn off old cam
