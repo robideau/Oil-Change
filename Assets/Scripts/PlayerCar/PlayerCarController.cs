@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 2/16/2016
+ * Last update - 2/18/2016
  */
 
 using UnityEngine;
@@ -155,9 +155,7 @@ public class PlayerCarController : MonoBehaviour {
 
 			//Full reset - reset to initial position and rotation
 			if (Input.GetKeyDown ("r") && fullResetEnabled) {
-				carBase.transform.position = ghostRecorder.getFramePosition (0);
-				carBase.transform.rotation = ghostRecorder.getFrameRotation (0);
-				carBase.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
+				fullReset();
 			}
 		
 		}
@@ -197,7 +195,15 @@ public class PlayerCarController : MonoBehaviour {
 	public GameObject[] getAllWheels() {
 		return new GameObject[4] { frontLeftWheel, frontRightWheel, rearLeftWheel, rearRightWheel };
 	}
-		
+
+	public void fullReset() {
+		carBase.transform.position = ghostRecorder.getFramePosition (0);
+		carBase.transform.rotation = ghostRecorder.getFrameRotation (0);
+		carBase.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
+		carBase.GetComponent<Rigidbody> ().angularVelocity = new Vector3 (0, 0, 0);
+		leftCollider.motorTorque = 0;
+		rightCollider.motorTorque = 0;
+	}
 }
 
 //Holds data for each separate axle - front and back
