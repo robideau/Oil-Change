@@ -4,6 +4,7 @@ using System.Collections;
 public class buildCameraController : MonoBehaviour {
 
 	public float speed;
+	public float shiftSpeed;
 	public float vRotate;
 	public float hRotate;
 
@@ -31,6 +32,9 @@ public class buildCameraController : MonoBehaviour {
 		float moveHorizontal = Input.GetAxis ("Horizontal");
 		float moveVertical = Input.GetAxis ("Vertical");
 
-		transform.Translate(moveHorizontal*speed*0.2f , 0.0f, moveVertical*speed*0.2f);
+		if(Input.GetKey("left shift"))
+			transform.Translate(moveHorizontal*(speed+shiftSpeed)*0.2f , 0.0f, moveVertical*(speed+shiftSpeed)*0.2f);
+		else
+			transform.Translate(moveHorizontal*speed*0.2f , 0.0f, moveVertical*speed*0.2f);
 	}
 }
