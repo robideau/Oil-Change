@@ -11,11 +11,12 @@ public class Chat : MonoBehaviour {
 
 	public Text lastChat;
 
+	List<string> chatLog;
 	private string current = string.Empty;
 	NetworkView nView;
 
 	public void Start() {
-		List<string> chatLog = new List<string> ();
+		chatLog = new List<string> ();
 	}
 
 	private void OnGUI () {
