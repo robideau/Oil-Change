@@ -32,13 +32,13 @@ public class NetworkMenu : MonoBehaviour {
 			int.TryParse(GUILayout.TextField(portNumber.ToString()), out portNumber);
 
 			if (GUILayout.Button ("Connect")) {
-				connectionIP = playerThem.ipAddress;
+				connectionIP = playerThem.ipAddress.ToString();
 				Network.Connect (connectionIP, portNumber);
 			}
 
 			if (GUILayout.Button ("Host")) {
 				//want to use my address
-				connectionIP = playerMe.ipAddress;
+				connectionIP = playerMe.ipAddress.ToString();
 				Network.InitializeServer (2, portNumber,false); 
 			}
 		} else {
