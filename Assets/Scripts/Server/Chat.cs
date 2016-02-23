@@ -13,9 +13,10 @@ public class Chat : MonoBehaviour {
 
 	private string current = string.Empty;
 	NetworkView nView;
+	public List<string> chatLog;
 
 	public void Start() {
-		List<string> chatLog = new List<string> ();
+		chatLog = new List<string> ();
 	}
 
 	private void OnGUI () {
