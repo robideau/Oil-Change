@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 2/18/2016
+ * Last update - 2/22/2016
  */
 
 using UnityEngine;
@@ -36,6 +36,7 @@ public class PlayerCarController : MonoBehaviour {
 	private int activeCamera = 0;
 	public bool displayControls;
 	public PlayerControlScheme controlScheme;
+	public float speedDamping;
 
 	//Speed and turn resistance paramteters
 	public float steerIncrements;
@@ -96,6 +97,9 @@ public class PlayerCarController : MonoBehaviour {
 			//Brake, reverse acceleration
 			if (Input.GetKey (controlScheme.decelerate) && !Input.GetKey (controlScheme.accelerate)) {
 				//While torque value is above negative maximum, apply more (inr. negative acceleration)
+				if (leftCollider.motorTorque > 0) {
+					dampenSpeed (speedDamping * 2);
+				}
 				if (leftCollider.motorTorque > -maxBackwardTorque) {
 					leftCollider.motorTorque += maxBackwardTorque * Input.GetAxis ("Vertical") * 2;
 					rightCollider.motorTorque += maxBackwardTorque * Input.GetAxis ("Vertical") * 2;
@@ -120,6 +124,7 @@ public class PlayerCarController : MonoBehaviour {
 
 			//If no acceleration input, decelerate
 			if (!Input.GetKey (controlScheme.accelerate) && !Input.GetKey (controlScheme.decelerate)) {
+				dampenSpeed (speedDamping);
 				leftCollider.brakeTorque = maxBrakeTorque;
 				rightCollider.brakeTorque = maxBrakeTorque;
 				if (leftCollider.motorTorque > 0) {
@@ -209,6 +214,12 @@ public class PlayerCarController : MonoBehaviour {
 		carBase.GetComponent<Rigidbody> ().angularVelocity = new Vector3 (0, 0, 0);
 		leftCollider.motorTorque = 0;
 		rightCollider.motorTorque = 0;
+	}
+
+	private void dampenSpeed(float speedDamping) {
+		carBase.GetComponent<Rigidbody> ().velocity = new Vector3 (Mathf.Lerp (carBase.GetComponent<Rigidbody> ().velocity.x, 0, Time.deltaTime * speedDamping),
+			carBase.GetComponent<Rigidbody>().velocity.y,
+			Mathf.Lerp (carBase.GetComponent<Rigidbody> ().velocity.z, 0, Time.deltaTime * speedDamping));
 	}
 }
 
