@@ -11,6 +11,7 @@ public class Chat : MonoBehaviour {
 
 	public Text lastChat;
 
+	List<string> chatLog;
 	private string current = string.Empty;
 	NetworkView nView;
 	public List<string> chatLog;

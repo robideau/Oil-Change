@@ -19,16 +19,38 @@ public class AccountCreationConfirmation : MonoBehaviour {
         string name = nameField.text;
         string p = passField.text;
         string pc = passConfirmField.text;
-        if (confirmName(name) && passConfirm(p, pc))
+        bool ncon = confirmName(name);
+        bool pcon = passConfirm(p, pc);
+        if (ncon && pcon)
         {
-
+            accountScreen.SetActive(false);
+            mainScreen.SetActive(true);
         }
 
     }
 
     private bool confirmName(string name)
     {
-        return false;
+
+        //will needed to do data base stuff with this but for now will do basic checks
+
+
+        if(name.Length <= 0)
+        {
+            userExistWarning.text = "no user name entered";
+            return false;
+        }
+        for (int i = 0; i < name.Length; i++)
+        {
+            if(name[i] == ' ')
+            {
+                userExistWarning.text = "no white spaces allowed in the username";
+                return false;
+            }
+        }
+
+        userExistWarning.text = "";
+        return true;
     }
 
     private bool passConfirm(string pass, string passCon)
@@ -51,32 +73,40 @@ public class AccountCreationConfirmation : MonoBehaviour {
 
         for(int i = 0; i < pass.Length; i++)
         {
-            if(pass[i] > 'a' || pass[i] < 'z')
+            if (System.Char.IsLetter(pass[i]) && System.Char.IsLower(pass[i]))
             {
                 lowerCheck = true;
             }
-            else if(pass[i] > 'A' || pass[i] < 'Z')
+            else if(System.Char.IsLetter(pass[i]) && !System.Char.IsLower(pass[i]))
             {
                 upperCheck = true;
             }
-            else if (System.Char.IsDigit(pass[i]))
+            else if (System.Char.IsNumber(pass[i]))
             {
                 numberCheck = true;
+            }
+            
+            if(pass[i] == ' ')
+            {
+                PasswordWarning.text = "no white spaces allowed in password";
+                return false;
             }
         }
         if(upperCheck && lowerCheck && numberCheck)
         {
+            PasswordWarning.text = "";
             return true;
+
         }
 
         string err = "pass missing: ";
         if (!upperCheck)
         {
-            err += "an upper case letter, "
+            err += "an upper case letter, ";
         }
         if (!lowerCheck)
         {
-            err += "a lower case letter, "
+            err += "a lower case letter, ";
         }
         if (!numberCheck)
         {
