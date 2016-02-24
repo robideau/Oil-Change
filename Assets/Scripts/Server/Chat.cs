@@ -9,21 +9,26 @@ using System.Collections.Generic;
 
 public class Chat : MonoBehaviour {
 
-	public Text lastChat;
+	public Text chat;
 
-	List<string> chatLog;
 	private string current = string.Empty;
 	NetworkView nView;
+	public List<string> chatLog;
+	public Rect textBox = new Rect(0,100,250,250);
 
 	public void Start() {
 		chatLog = new List<string> ();
+	}
+
+	private void Awake() {
+		chat = GetComponent<Text> ();
 	}
 
 	private void OnGUI () {
 		if (!NetworkMenu.connected) {
 			return;
 		}
-		GUILayout.BeginHorizontal(GUILayout.Width (250));
+		GUILayout.BeginArea(textBox);
 		current = GUILayout.TextField (current);
 		if (GUILayout.Button("Send")) {
 			//don't send an empty message
@@ -32,15 +37,11 @@ public class Chat : MonoBehaviour {
 				current = string.Empty;
 			}
 		}
-		GUILayout.EndHorizontal();
-		foreach (string x in chatLog) {
-			GUILayout.Label (x);
-		}
+		GUILayout.EndArea();
 	}
 
-	[RPC]
 	public void ChatMessage (string message) {
-		lastChat.text = message;
+		chat.text = message;
 		chatLog.Add (message);
 	}
 }
