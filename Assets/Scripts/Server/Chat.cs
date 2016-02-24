@@ -14,10 +14,21 @@ public class Chat : MonoBehaviour {
 	private string current = string.Empty;
 	NetworkView nView;
 	public List<string> chatLog;
-	public Rect textBox = new Rect(0,100,250,250);
+	public Rect textBox = new Rect(Screen.width,Screen.height,250,250);
+	public bool sendMessage = false;
+	public bool openChat = false;
 
 	public void Start() {
 		chatLog = new List<string> ();
+	}
+
+	public void Update() {
+		if (Input.GetKeyDown (KeyCode.Return)) {
+			sendMessage = true;
+		}
+		if(Input.GetKeyDown(KeyCode.C) {
+
+		}
 	}
 
 	private void Awake() {
@@ -30,7 +41,8 @@ public class Chat : MonoBehaviour {
 		}
 		GUILayout.BeginArea(textBox);
 		current = GUILayout.TextField (current);
-		if (GUILayout.Button("Send")) {
+		if (sendMessage) {
+			sendMessage = false;
 			//don't send an empty message
 			if (!string.IsNullOrEmpty (current.Trim ())) {
 				ChatMessage (current);
