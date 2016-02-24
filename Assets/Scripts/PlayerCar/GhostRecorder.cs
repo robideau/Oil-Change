@@ -52,9 +52,9 @@ public class GhostRecorder : MonoBehaviour {
 
 		//If ghost is currently replaying
 		if (getIsReplaying () && currentFrame < recordingCount-1) {
-			ghostBody.transform.position = new Vector3 (positionData [currentFrame].x, positionData[currentFrame].y, positionData[currentFrame].z);
+			ghostBody.transform.position = new Vector3 (positionData [currentFrame].x, positionData[currentFrame].y + .2f, positionData[currentFrame].z);
 			ghostBody.transform.rotation = rotationData [currentFrame];
-			ghostBody.transform.Rotate(new Vector3(270, 0, 0));
+			ghostBody.transform.Rotate(new Vector3(0, -90, 0));
 		}
 
 	}
@@ -69,8 +69,9 @@ public class GhostRecorder : MonoBehaviour {
 	public void replayGhost() {
 		ghostBody = Instantiate (carBody);
 		ghostBody.GetComponent<BoxCollider> ().enabled = false;
-		ghostBody.transform.position = new Vector3 (initialTransform.position.x, initialTransform.transform.position.y, initialTransform.position.z);
+		ghostBody.transform.position = new Vector3 (initialTransform.position.x, initialTransform.transform.position.y + .2f, initialTransform.position.z);
 		ghostBody.transform.rotation = initialTransform.rotation;
+		ghostBody.transform.localScale = new Vector3 (0.13f, 0.13f, 0.13f);
 		setIsReplaying (true);
 		currentFrame = 0;
 	}
