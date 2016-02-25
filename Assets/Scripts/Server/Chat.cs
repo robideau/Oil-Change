@@ -26,9 +26,9 @@ public class Chat : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Return)) {
 			sendMessage = true;
 		}
-		if(Input.GetKeyDown(KeyCode.C) {
-
-		}
+//		if(Input.GetKeyDown(KeyCode.C) {
+//
+//		}
 	}
 
 	private void Awake() {
