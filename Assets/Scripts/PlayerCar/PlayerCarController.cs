@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 2/22/2016
+ * Last update - 2/25/2016
  */
 
 using UnityEngine;
@@ -37,6 +37,7 @@ public class PlayerCarController : MonoBehaviour {
 	public bool displayControls;
 	public PlayerControlScheme controlScheme;
 	public float speedDamping;
+	private float carBodyHeight;
 
 	//Speed and turn resistance paramteters
 	public float steerIncrements;
@@ -75,6 +76,8 @@ public class PlayerCarController : MonoBehaviour {
 			controlScheme.displayControls ();
 		}
 
+		carBodyHeight = carBody.GetComponent<Collider> ().bounds.extents.y;
+
 		movementEnabled = true;
 			
 	}
@@ -95,8 +98,9 @@ public class PlayerCarController : MonoBehaviour {
 			}
 
 			//Brake, reverse acceleration
-			if (Input.GetKey (controlScheme.decelerate) && !Input.GetKey (controlScheme.accelerate)) {
+			if (Input.GetKey (controlScheme.decelerate) && !Input.GetKey (controlScheme.accelerate) && isNotAirborne()) {
 				//While torque value is above negative maximum, apply more (inr. negative acceleration)
+				dampenSpeed (speedDamping * 3);
 				if (leftCollider.motorTorque > 0) {
 					dampenSpeed (speedDamping * 2);
 				}
@@ -123,7 +127,7 @@ public class PlayerCarController : MonoBehaviour {
 			}
 
 			//If no acceleration input, decelerate
-			if (!Input.GetKey (controlScheme.accelerate) && !Input.GetKey (controlScheme.decelerate)) {
+			if (!Input.GetKey (controlScheme.accelerate) && !Input.GetKey (controlScheme.decelerate) && isNotAirborne()) {
 				dampenSpeed (speedDamping);
 				leftCollider.brakeTorque = maxBrakeTorque;
 				rightCollider.brakeTorque = maxBrakeTorque;
@@ -220,6 +224,10 @@ public class PlayerCarController : MonoBehaviour {
 		carBase.GetComponent<Rigidbody> ().velocity = new Vector3 (Mathf.Lerp (carBase.GetComponent<Rigidbody> ().velocity.x, 0, Time.deltaTime * speedDamping),
 			carBase.GetComponent<Rigidbody>().velocity.y,
 			Mathf.Lerp (carBase.GetComponent<Rigidbody> ().velocity.z, 0, Time.deltaTime * speedDamping));
+	}
+		
+	public bool isNotAirborne() {
+		return Physics.Raycast (transform.position, -Vector3.up, carBodyHeight + .1f);
 	}
 }
 
