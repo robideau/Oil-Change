@@ -38,6 +38,8 @@ public class ObjectController : MonoBehaviour {
 	public void SetCurrentObject (GameObject button) {
 		string prefabName = button.transform.GetChild(0).GetComponent<Text>().text;
 		GameObject toInstantiate = (GameObject) Resources.Load(prefabsDirectory + "/" + prefabName, typeof(GameObject));
+		if(currentObject != null) // Delete currentObject if object has not been placed and button is clicked
+			Destroy(currentObject);
 		currentObject = (GameObject) Instantiate(toInstantiate, new Vector3(0.0f, 1.0f, 0.0f), Quaternion.identity);
 	}
 }
