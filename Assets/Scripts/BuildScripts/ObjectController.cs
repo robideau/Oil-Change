@@ -37,8 +37,7 @@ public class ObjectController : MonoBehaviour {
 	// Called by prefab buttons in buildScreen.
 	public void SetCurrentObject (GameObject button) {
 		string prefabName = button.transform.GetChild(0).GetComponent<Text>().text;
-		currentObject = (GameObject) Resources.Load(prefabsDirectory + "/" + prefabName, typeof(GameObject));
-		currentObject.transform.position = new Vector3(0.0f, 1.0f, 0.0f);
-		Instantiate(currentObject, new Vector3(0.0f, 1.0f, 0.0f), Quaternion.identity);
+		GameObject toInstantiate = (GameObject) Resources.Load(prefabsDirectory + "/" + prefabName, typeof(GameObject));
+		currentObject = (GameObject) Instantiate(toInstantiate, new Vector3(0.0f, 1.0f, 0.0f), Quaternion.identity);
 	}
 }
