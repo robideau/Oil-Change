@@ -42,9 +42,19 @@ public class GatherGameInfo : MonoBehaviour {
         //break they keys text down into an array that will be deep copied into the playable game
         string keysToAdd = keys.text;
         char[] delim = { ',', ' ' };
-        reference.setKeys(keysToAdd.Split(delim));
-         
+        string[] keycollection = keysToAdd.Split(delim);
+        reference.setKeys(keycollection);
 
+
+        //update the prefabs text to clearly display the game information
+        prefabclone.name = "host names game";
+        updateText updates = prefabclone.GetComponent<updateText>();
+        updates.update(gameName.text,"host to be found",keycollection,0);
+
+        //reset the create match screen details
+        keys.text = "";
+        gameName.text = "";
+        
     }
 
 
