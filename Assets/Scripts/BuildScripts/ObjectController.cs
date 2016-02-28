@@ -13,6 +13,7 @@ using System.Collections;
 public class ObjectController : MonoBehaviour {
 
 	public Camera mainCamera;
+	public float rayCastDist;
 
 	private GameObject currentObject;
 	private bool buildMenuTestDir;
@@ -31,7 +32,23 @@ public class ObjectController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-
+		// If currentObject exists
+		if(currentObject)
+		{
+			RaycastHit hit;
+			if(Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+			{
+				if(!currentObject.activeSelf)
+					currentObject.SetActive(true);
+				if(hit.collider.gameObject.tag == "Grid")
+					currentObject.transform.position = hit.point;
+			}
+			else
+			{
+				if(currentObject.activeSelf)
+					currentObject.SetActive(false);
+			}
+		}
 	}
 
 	// Called by prefab buttons in buildScreen.
