@@ -46,7 +46,7 @@ public class GatherGameInfo : MonoBehaviour {
         reference.setName(gameName.text);
         //break they keys text down into an array that will be deep copied into the playable game
         string keysToAdd = keys.text;
-        char[] delim = { ',', ' ', '/n' };
+        char[] delim = { ',', ' ', '\n' };
         string[] keycollection = keysToAdd.Split(delim);
         reference.setKeys(keycollection);
 
