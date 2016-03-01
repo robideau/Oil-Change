@@ -23,7 +23,7 @@ public class updateText : MonoBehaviour {
         keyWords.text = "";
         for(int i = 0; i < keys.Length; i++)
         {
-            keyWords.text = keyWords.text + ", " + keys[i];
+            keyWords.text = keyWords.text + " " + keys[i];
         }
     }
 }
