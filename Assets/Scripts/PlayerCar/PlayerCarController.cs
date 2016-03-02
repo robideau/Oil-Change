@@ -203,6 +203,10 @@ public class PlayerCarController : MonoBehaviour {
 		return leftCollider.motorTorque;
 	}
 
+	public void setMovementEnabled(bool enabled) {
+		movementEnabled = enabled;
+	}
+
 	public float getSteerAngle() {
 		return leftCollider.steerAngle;
 	}
