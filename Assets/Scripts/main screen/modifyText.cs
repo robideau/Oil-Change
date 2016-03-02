@@ -2,6 +2,10 @@
 using System.Collections;
 using UnityEngine.UI;
 
+
+/**
+created by Ryan Young
+*/
 public class modifyText : MonoBehaviour {
 
     public Text modify;
@@ -9,6 +13,9 @@ public class modifyText : MonoBehaviour {
     int trackedLength = 0;
     public Text error;
 
+    /**
+    *sets the text in modify to empty... resets line count and tracked length
+    */
     public void clear()
     {
         modify.text = "";
@@ -17,6 +24,11 @@ public class modifyText : MonoBehaviour {
         line = 0;
     }
 
+    /**
+    *adds the given input string to the end of the current text
+    *returns to next line if line limit reached
+    *
+    */
     public void extend(string extend)
     {
         if(modify.text.Length < 26)
@@ -48,6 +60,9 @@ public class modifyText : MonoBehaviour {
         }
     }
 
+    /**
+    *adds the text from the Dropdown to the end of modify account for line length and line number
+    */
     public void extend(Dropdown pullFrom)
     {
         if (modify.text.Length < 26)
