@@ -3,7 +3,7 @@
  * 
  * This script tracks game data and handles server updates - timers, ghost data, etc.
  *
- * Last update - 3/1/2016
+ * Last update - 3/3/2016
  */
 
 using UnityEngine;
@@ -41,12 +41,13 @@ public class GameTracker : MonoBehaviour {
 	}
 
 	void Update () { 
+		
 		if (isPlaying) {
 			updateTimer ();
 		}
 
 		//Debug only - replace with "finish" event later
-		if (Input.GetKeyDown ("x")) {
+		if (playerCar.GetComponent<PlayerCarController>().hasFinished && isPlaying) {
 			stopTimer ();
 			//For debug purposes - replace with player names later
 			string opponentName;

@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 2/25/2016
+ * Last update - 3/1/2016
  */
 
 using UnityEngine;
@@ -52,6 +52,7 @@ public class PlayerCarController : MonoBehaviour {
 	private WheelCollider rightCollider;
 	private WheelCollider leftCollider;
 
+	public bool hasFinished;
 
 	void Start () {
 
