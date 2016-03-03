@@ -2,9 +2,13 @@
 using UnityEngine.UI;
 using System.Collections;
 
+/**
+*created by Ryan Young, last modified March 2
+*/
 public class AccountCreationConfirmation : MonoBehaviour {
 
     public InputField nameField;
+    public InputField emailField;
     public InputField passField;
     public InputField passConfirmField;
 
@@ -13,22 +17,35 @@ public class AccountCreationConfirmation : MonoBehaviour {
 
     public Text PasswordWarning;
     public Text userExistWarning;
+    public Text emailWarning;
 
     public void checkCofirmNew()
     {
         string name = nameField.text;
+        string email = emailField.text;
         string p = passField.text;
         string pc = passConfirmField.text;
+        bool econ = confirmEmail(email);
         bool ncon = confirmName(name);
         bool pcon = passConfirm(p, pc);
-        if (ncon && pcon)
+        if (ncon && pcon && econ)
         {
+
+            //want to find a way to modify this component without setter methods
+            //if needed setter methods will be done but thats a bit annoying...
+            //GameObject cur = this.gameObject;
+            //accountInfo curAccount = cur.GetComponent<accountInfo>();
+            
+
             accountScreen.SetActive(false);
             mainScreen.SetActive(true);
         }
 
     }
 
+    /**
+    *varifys that the given name is acceptable and not already in use
+    */
     private bool confirmName(string name)
     {
 
@@ -53,6 +70,9 @@ public class AccountCreationConfirmation : MonoBehaviour {
         return true;
     }
 
+    /**
+    *makes sure that the password is acceptable and both passwords match
+    */
     private bool passConfirm(string pass, string passCon)
     {
 
@@ -117,5 +137,31 @@ public class AccountCreationConfirmation : MonoBehaviour {
 
         PasswordWarning.text = err;
         return false;
+    }
+
+    /**
+    *checks email to see if it is of standard form... word@word
+    */
+    private bool confirmEmail(string email)
+    {
+        int split = -1;
+        for(int i = 0; i < email.Length; i++)
+        {
+            if(email[i] == '@'){
+                split = i;
+                break;
+            }
+        }
+
+        //if split != -1 then @ was found and if its index is not at the ends of the email
+        //string then the email is assumed to be formatted fine.
+        if(split <= 0 || split == email.Length-1)
+        {
+            emailWarning.text = "bad email given";
+            return false;
+        }
+
+        emailWarning.text = "";
+        return true;
     }
 }
