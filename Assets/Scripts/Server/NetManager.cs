@@ -30,7 +30,7 @@ public class NetManager : MonoBehaviour {
 
 	//First routine called by server
 	private void StartServer() {
-		Network.InitializeServer (2, listeningPort, false); //Initialize server - max. 2 connections, use NAT if public address
+		Network.InitializeServer (2, listeningPort, true); //Initialize server - max. 2 connections, use NAT if public address
 		MasterServer.RegisterHost(typeName, gameName);
 		if (useLocalMasterServer) {
 			MasterServer.ipAddress = masterServerIP;
