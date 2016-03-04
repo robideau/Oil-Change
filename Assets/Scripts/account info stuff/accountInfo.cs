@@ -13,7 +13,10 @@ public class accountInfo : MonoBehaviour {
     private string email;
     private stats playerRecord;
 
+    public accountInfo()
+    {
 
+    }
 
     //added features
     //private IP address for this account?
@@ -21,7 +24,7 @@ public class accountInfo : MonoBehaviour {
     /**
     *checks data base for existing player name and loads in player information
     */
-	public accountInfo(string existingPlayer)
+	public void loadAccount(string existingPlayer)
     {
         //to do check for player existence
         //load in player friends list
@@ -45,7 +48,7 @@ public class accountInfo : MonoBehaviour {
     * a new player account is made so send to data base the player name and password
     * initialize other player info to default new player
     */
-    public accountInfo(string newPlayerName,string newPlayerEmail, string password)
+    public void newAccount(string newPlayerName,string newPlayerEmail, string password)
     {
         //set username email initialize empty friends list and new stats with 0 stats so far
         userName = newPlayerName;
@@ -115,5 +118,10 @@ public class accountInfo : MonoBehaviour {
     public stats getStats()
     {
         return playerRecord;
+    }
+
+    public void setEmail(string newEmail)
+    {
+        email = newEmail;
     }
 }

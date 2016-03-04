@@ -31,11 +31,10 @@ public class AccountCreationConfirmation : MonoBehaviour {
         if (ncon && pcon && econ)
         {
 
-            //want to find a way to modify this component without setter methods
-            //if needed setter methods will be done but thats a bit annoying...
-            //GameObject cur = this.gameObject;
-            //accountInfo curAccount = cur.GetComponent<accountInfo>();
-            
+            //set the games sessions Account
+            GameObject cur = this.gameObject;
+            accountInfo curAccount = cur.GetComponent<accountInfo>();
+            curAccount.newAccount(name, email, p);
 
             accountScreen.SetActive(false);
             mainScreen.SetActive(true);
@@ -46,7 +45,7 @@ public class AccountCreationConfirmation : MonoBehaviour {
     /**
     *varifys that the given name is acceptable and not already in use
     */
-    private bool confirmName(string name)
+    public bool confirmName(string name)
     {
 
         //will needed to do data base stuff with this but for now will do basic checks
@@ -73,7 +72,7 @@ public class AccountCreationConfirmation : MonoBehaviour {
     /**
     *makes sure that the password is acceptable and both passwords match
     */
-    private bool passConfirm(string pass, string passCon)
+    public bool passConfirm(string pass, string passCon)
     {
 
         bool upperCheck = false;
@@ -142,7 +141,7 @@ public class AccountCreationConfirmation : MonoBehaviour {
     /**
     *checks email to see if it is of standard form... word@word
     */
-    private bool confirmEmail(string email)
+    public bool confirmEmail(string email)
     {
         int split = -1;
         for(int i = 0; i < email.Length; i++)

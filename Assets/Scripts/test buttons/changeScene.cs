@@ -3,8 +3,9 @@ using System.Collections;
 
 public class changeScene : MonoBehaviour {
 
-	public void switchScenes()
+
+	public void switchScenes(string scene)
     {
-        Application.LoadLevel(2);
+        Application.LoadLevel(scene);
     }
 }
