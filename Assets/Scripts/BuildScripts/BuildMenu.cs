@@ -4,19 +4,25 @@
  * This script procedurally generates the build menu based on premade build objects.
  * Also handles page turning logic.
  *
- * Last update - 2/25/2016
+ * Last update - 3/6/2016
  */
 
 using UnityEngine;
+using System.IO;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class BuildMenu : MonoBehaviour {
 
 	//MENU GENERATION OPTIONS
 	public bool buildMenuFromTest; //Toggle to build from "Test" prefab folder instead of "Final"
 	public int itemsPerPage; //Default 6 - cannot be changed yet
+	public bool buttonTextOn;
 
 	//UI REFERENCES
 	public GameObject buildObjectButtons;
@@ -50,7 +56,13 @@ public class BuildMenu : MonoBehaviour {
 		finalPageObjectCount = prefabList.Count % itemsPerPage;
 		pageIndicator.text = "1/" + numPages;
 
+		//Only pull prefab icons in editor - can not be used in-game.
+		if (Application.isEditor) {
+			generateIcons ();
+		}
+
 		generateMenuItems (1);
+
 	}
 
 	void Update () {
@@ -73,8 +85,27 @@ public class BuildMenu : MonoBehaviour {
 			}
 		}
 		for (int i = 0; i < currentPageObjects.Count; i++) {
-			Text currentButtonText = buildObjectButtons.transform.GetChild (i).GetChild(0).GetComponent<Text>();
-			currentButtonText.text = currentPageObjects[i].name;
+			//Generate button text
+			Text currentButtonText = buildObjectButtons.transform.GetChild (i).GetChild (0).GetComponent<Text> ();
+			currentButtonText.text = currentPageObjects [i].name;
+			if (!buttonTextOn) {
+				currentButtonText.enabled = false;
+			}
+			//Generate button image
+			Sprite currentButtonSprite; 
+			byte[] imageData;
+			if (Application.isEditor) {
+				imageData = File.ReadAllBytes(Application.dataPath + "/StreamingAssets/Icons/" + currentPageObjects[i].name + ".png");
+			} else {
+				imageData = File.ReadAllBytes(Application.streamingAssetsPath + "/Icons/" + currentPageObjects[i].name + ".png");
+			}
+			Texture2D currentButtonTexture = new Texture2D(1, 1);
+			currentButtonTexture.LoadImage (imageData);
+			currentButtonSprite = Sprite.Create (currentButtonTexture, 
+				new Rect (0, 0, currentButtonTexture.width, currentButtonTexture.height),
+				new Vector2 (0.5f, 0.5f),
+				50);
+			buildObjectButtons.transform.GetChild (i).GetComponent<Image> ().overrideSprite = currentButtonSprite;
 		}
 	}
 
@@ -102,4 +133,18 @@ public class BuildMenu : MonoBehaviour {
 			pageIndicator.text = currentPage + "/" + numPages;
 		}
 	}
+
+	//Pull prefab icons and apply to buttons - can only be run in the editor, but must be run once before build.
+	private void generateIcons() {
+		#if UNITY_EDITOR
+		for (int i = 0; i < prefabList.Count; i++) {
+			GameObject currentPrefab = prefabList [i];
+			Texture2D currentPrefabIconTexture = null;
+			currentPrefabIconTexture = AssetPreview.GetAssetPreview (currentPrefab); //Generate texture
+			byte[] textureData = currentPrefabIconTexture.EncodeToPNG (); //Generate image from texture
+			File.WriteAllBytes (Application.dataPath + "//StreamingAssets//Icons//" + currentPrefab.name + ".png", textureData); //Save image to assets
+		}
+		#endif
+	}
+
 }
