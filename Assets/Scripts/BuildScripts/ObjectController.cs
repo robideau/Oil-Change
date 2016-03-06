@@ -3,7 +3,7 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 2/26/2016
+ * Last update - 3/6/2016
  */
 
 using UnityEngine;
@@ -14,6 +14,8 @@ public class ObjectController : MonoBehaviour {
 
 	public Camera mainCamera;
 	public float rayCastDist;
+
+	public int gridBlockSize;
 
 	private GameObject currentObject;
 	private bool buildMenuTestDir;
@@ -46,8 +48,13 @@ public class ObjectController : MonoBehaviour {
 			{
 				if(!currentObject.activeSelf)
 					currentObject.SetActive(true);
-				if(hit.collider.gameObject.tag == "Grid")
-					currentObject.transform.position = hit.point;
+				if (hit.collider.gameObject.tag == "Grid") {
+					Vector3 hitPoint = hit.point;
+					hitPoint.x = Mathf.Floor (hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
+					hitPoint.z = Mathf.Floor (hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
+					currentObject.transform.position = hitPoint; //Snap to grid
+
+				}
 			}
 			else
 			{
