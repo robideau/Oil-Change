@@ -13,14 +13,13 @@ using System.Collections;
 
 public class ObjectController : MonoBehaviour {
 
-	public Camera mainCamera;
 	public float rayCastDist;
-
 	public int gridBlockSize;
 
 	private GameObject currentObject;
 	private bool buildMenuTestDir;
 	private string prefabsDirectory;
+	private Vector3 hitPoint;
 
 	void Start () {
 		currentObject = null;
@@ -45,21 +44,24 @@ public class ObjectController : MonoBehaviour {
 		if(currentObject)
 		{
 			RaycastHit hit;
-			if(Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+			if(Camera.current != null)
 			{
-				if(!currentObject.activeSelf)
-					currentObject.SetActive(true);
-				if (hit.collider.gameObject.tag == "Grid") {
-					Vector3 hitPoint = hit.point;
-					hitPoint.x = Mathf.Round(hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
-					hitPoint.z = Mathf.Round(hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
-					currentObject.transform.position = hitPoint; //Snap to grid
+				if(Physics.Raycast(Camera.current.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+				{
+					if(!currentObject.activeSelf)
+						currentObject.SetActive(true);
+					if (hit.collider.gameObject.tag == "Grid") {
+						hitPoint = hit.point;
+						hitPoint.x = Mathf.Round(hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
+						hitPoint.z = Mathf.Round(hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
+						currentObject.transform.position = hitPoint; //Snap to grid
+					}
 				}
-			}
-			else
-			{
-				if(currentObject.activeSelf)
-					currentObject.SetActive(false);
+				else
+				{
+					if(currentObject.activeSelf)
+						currentObject.SetActive(false);
+				}
 			}
 		}
 	}
@@ -70,6 +72,6 @@ public class ObjectController : MonoBehaviour {
 		GameObject toInstantiate = (GameObject) Resources.Load(prefabsDirectory + "/" + prefabName, typeof(GameObject));
 		if(currentObject != null) // Delete currentObject if object has not been placed and button is clicked
 			Destroy(currentObject);
-		currentObject = (GameObject) Instantiate(toInstantiate, new Vector3(0.0f, 1.0f, 0.0f), Quaternion.identity);
+		currentObject = (GameObject) Instantiate(toInstantiate, hitPoint, Quaternion.identity);
 	}
 }

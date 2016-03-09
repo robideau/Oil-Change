@@ -4,7 +4,7 @@
  * This script procedurally generates the build menu based on premade build objects.
  * Also handles page turning logic.
  *
- * Last update - 3/6/2016
+ * Last update - 3/9/2016
  */
 
 using UnityEngine;
@@ -23,6 +23,7 @@ public class BuildMenu : MonoBehaviour {
 	public bool buildMenuFromTest; //Toggle to build from "Test" prefab folder instead of "Final"
 	public int itemsPerPage; //Default 6 - cannot be changed yet
 	public bool buttonTextOn;
+	public Texture2D defaultTexture;
 
 	//UI REFERENCES
 	public GameObject buildObjectButtons;
@@ -141,7 +142,11 @@ public class BuildMenu : MonoBehaviour {
 			GameObject currentPrefab = prefabList [i];
 			Texture2D currentPrefabIconTexture = null;
 			currentPrefabIconTexture = AssetPreview.GetAssetPreview (currentPrefab); //Generate texture
-			byte[] textureData = currentPrefabIconTexture.EncodeToPNG (); //Generate image from texture
+			byte[] textureData = null;
+			if(currentPrefabIconTexture == null)
+				textureData = defaultTexture.EncodeToPNG();
+			else
+				textureData = currentPrefabIconTexture.EncodeToPNG (); //Generate image from texture
 			File.WriteAllBytes (Application.dataPath + "//StreamingAssets//Icons//" + currentPrefab.name + ".png", textureData); //Save image to assets
 		}
 		#endif
