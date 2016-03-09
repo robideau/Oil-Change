@@ -16,6 +16,7 @@ public class GatherGameInfo : MonoBehaviour {
     public Dropdown placeLimit;
     public InputField gameName;
     public Text keys;
+    public accountInfo player;
 
 
     public GameObject prefab;
@@ -52,9 +53,9 @@ public class GatherGameInfo : MonoBehaviour {
 
 
         //update the prefabs text to clearly display the game information
-        prefabclone.name = "host names game";
+        prefabclone.name = "game by " + player.getName() ;
         updateText updates = prefabclone.GetComponent<updateText>();
-        updates.update(gameName.text,"host to be found",keycollection,0);
+        updates.updateLarge(gameName.text,player.getName(),keycollection,0, placeLimit.captionText.text, timeLimit.captionText.text);
 
         //reset the create match screen details
         keys.text = "";
