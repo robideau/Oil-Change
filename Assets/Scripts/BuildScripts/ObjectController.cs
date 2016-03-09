@@ -46,7 +46,7 @@ public class ObjectController : MonoBehaviour {
 			RaycastHit hit;
 			if(Camera.current != null)
 			{
-				if(Physics.Raycast(Camera.current.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+				if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
 				{
 					if(!currentObject.activeSelf)
 						currentObject.SetActive(true);
