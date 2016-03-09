@@ -3,11 +3,12 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 3/6/2016
+ * Last update - 3/9/2016
  */
 
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public class ObjectController : MonoBehaviour {
@@ -35,7 +36,7 @@ public class ObjectController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// Place object
-		if(Input.GetMouseButtonDown(0))
+		if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
 			currentObject = null;
 		}
@@ -53,7 +54,6 @@ public class ObjectController : MonoBehaviour {
 					hitPoint.x = Mathf.Round(hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
 					hitPoint.z = Mathf.Round(hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
 					currentObject.transform.position = hitPoint; //Snap to grid
-
 				}
 			}
 			else
