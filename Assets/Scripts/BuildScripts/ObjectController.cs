@@ -50,8 +50,8 @@ public class ObjectController : MonoBehaviour {
 					currentObject.SetActive(true);
 				if (hit.collider.gameObject.tag == "Grid") {
 					Vector3 hitPoint = hit.point;
-					hitPoint.x = Mathf.Floor (hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
-					hitPoint.z = Mathf.Floor (hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
+					hitPoint.x = Mathf.Round(hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
+					hitPoint.z = Mathf.Round(hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
 					currentObject.transform.position = hitPoint; //Snap to grid
 
 				}
