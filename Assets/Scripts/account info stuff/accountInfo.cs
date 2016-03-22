@@ -65,7 +65,7 @@ public class accountInfo : MonoBehaviour {
     */
     public void forwardData()
     {
-        //need to forward current data from database (includes all statistic information)
+        //need to forward current data to database (includes all statistic information)
 
 
     }
