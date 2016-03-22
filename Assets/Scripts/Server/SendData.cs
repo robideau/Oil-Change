@@ -17,12 +17,13 @@ public class SendData  : MonoBehaviour {
 	public TrackScanner ts;
 
 
-	//Constructor for SendData
-	//Data should be formatted as ID,X,Y,Z,prefab
 	public void writeData() {
 		ts.scanLevelData();
 		ts.cleanObjectNames();
 		dataToSend = ts.getScannedLevelData();
+		//used for testing without TrackScanner
+		//dataToSend = "This is a test message";
+		sendData ();
 	}
 
 	public string getData() {
@@ -31,7 +32,7 @@ public class SendData  : MonoBehaviour {
 
 	public void sendData() {
 		dataBytes = getBytes (dataToSend);
-		nView.RPC ("receiveData", RPCMode.Others, dataBytes);
+		nView.RPC ("receiveData", RPCMode.All, dataBytes);
 	}
 
 	//convert a string into a byte array
@@ -55,7 +56,7 @@ public class SendData  : MonoBehaviour {
 		chars = Encoding.ASCII.GetChars (data);
 		string result = new string (chars);
 		//print result to console log for debugging
-		print (result);
+		//Debug.Log(result);
 		return result;
 	}
 
