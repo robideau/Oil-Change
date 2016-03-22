@@ -15,14 +15,20 @@ public class SendData  : MonoBehaviour {
 	private byte[] dataBytes;
 	public NetworkView nView;
 
+
 	//Constructor for SendData
 	//Data should be formatted as ID,X,Y,Z,prefab
-	public SendData(string data) {
+	public void writeData(string data) {
 		dataToSend = data;
-		byte[] dataBytes = new byte[data.Length * sizeof(char)];
-		dataBytes = getBytes (data);
-		//send the data to everyone but yourself
-		nView.RPC ("recieveData", RPCMode.Others, dataBytes);
+	}
+
+	public string getData() {
+		return dataToSend;
+	}
+
+	public void sendData() {
+		dataBytes = getBytes (dataToSend);
+		nView.RPC ("receiveData", RPCMode.Others, dataBytes);
 	}
 
 	//convert a string into a byte array
@@ -39,12 +45,15 @@ public class SendData  : MonoBehaviour {
 	}
 
 	//RPC call for transferring the data to other players
-	//takes in a byte array and then tr
+	//takes in a byte array and then translates it back to a string for use elsewhere
 	[RPC]
 	public string receiveData(byte[] data) {
 		char[] chars = new char[data.Length];
 		chars = Encoding.ASCII.GetChars (data);
-		return new string (chars);
+		string result = new string (chars);
+		//print result to console log for debugging
+		print (result);
+		return result;
 	}
 
 }
