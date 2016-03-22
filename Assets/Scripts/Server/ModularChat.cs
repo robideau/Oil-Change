@@ -33,6 +33,7 @@ public class ModularChat : MonoBehaviour {
 	void Start () {
 		messageLog = new List<chatMessage> ();
 		chatLogView.transform.FindChild ("Scrollbar Vertical").GetComponent<Scrollbar> ().value = .98f;
+		ChatUI.SetActive (false);
 	}
 
 	void Update () {
