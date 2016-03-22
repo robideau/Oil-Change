@@ -14,12 +14,15 @@ public class SendData  : MonoBehaviour {
 	private string dataToSend;
 	private byte[] dataBytes;
 	public NetworkView nView;
+	public TrackScanner ts;
 
 
 	//Constructor for SendData
 	//Data should be formatted as ID,X,Y,Z,prefab
-	public void writeData(string data) {
-		dataToSend = data;
+	public void writeData() {
+		ts.scanLevelData();
+		ts.cleanObjectNames();
+		dataToSend = ts.getScannedLevelData();
 	}
 
 	public string getData() {

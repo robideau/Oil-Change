@@ -121,7 +121,7 @@ public class TrackScanner : MonoBehaviour {
 	//Clean object names in scanned level data
 	//Use this function to remove (#) tags on the end of prefab instances
 	//Trims strings at first space - VERY IMPORTANT: DO NOT USE SPACES IN PREFAB NAMES
-	private void cleanObjectNames() {
+	public void cleanObjectNames() {
 		string[] stringLines = scannedLevelData.Split (delimiter);
 		scannedLevelData = "";
 		for (int i = 0; i < stringLines.Length; i++) {
