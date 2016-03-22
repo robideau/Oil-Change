@@ -126,8 +126,8 @@ public class TrackScanner : MonoBehaviour {
 		scannedLevelData = "";
 		for (int i = 0; i < stringLines.Length; i++) {
 			if (i % 4 == 0) {
-				string[] tokens = stringLines [i].Split (' ');
-				scannedLevelData += (tokens [0] + "\n");
+				string[] tokens = stringLines [i].Split ('(');
+				scannedLevelData += (tokens [0].Trim() + "\n");
 			} else {
 				scannedLevelData += (stringLines [i] + "\n");
 			}
