@@ -11,34 +11,50 @@ public class SignInCheck : MonoBehaviour {
     public Text warnings;
     public accountInfo curAccount;
     private char passed = 'q';
+    private bool gettingData = false;
 
 	public void AccountCheck()
     {
+        passed = 'q';
         string name = namefield.text;
         string pass = passfield.text;
         warnings.text = "";
         StartCoroutine(Name_PassCheck(name, pass));
+        StartCoroutine(confirm(name));
+        
+
+    }
+
+    IEnumerator confirm(string name)
+    {
+        while (gettingData)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
         if (passed == 't')
         {
             login.SetActive(false);
             main.SetActive(true);
             namefield.text = "";
             passfield.text = "";
+            curAccount.loadAccount(name);
         }
-        else if(passed == 'f')
+        else if (passed == 'f')
         {
             passfield.text = "";
         }
-        else if(passed == 'u')
+        else if (passed == 'u')
         {
             passfield.text = "";
             namefield.text = "";
         }
-
     }
 
     IEnumerator Name_PassCheck(string name, string pass)
     {
+
+        gettingData = true;
         string post_url = "http://proj-309-38.cs.iastate.edu/php/login.php?" + "username=" + WWW.EscapeURL(name) + "&password=" + pass;
         WWW pn_check = new WWW(post_url);
         yield return pn_check;
@@ -66,10 +82,11 @@ public class SignInCheck : MonoBehaviour {
             }
             else
             {
-                warnings.text = check;
-                passed = 'q';
+                warnings.text = "problem with server";
+                passed = 'x';
             }
         }
+        gettingData = false;
     }
 
 }

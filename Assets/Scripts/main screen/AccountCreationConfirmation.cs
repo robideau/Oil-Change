@@ -8,7 +8,6 @@ using System.Collections;
 public class AccountCreationConfirmation : MonoBehaviour {
 
     public InputField nameField;
-    public InputField emailField;
     public InputField passField;
     public InputField passConfirmField;
 
@@ -17,40 +16,62 @@ public class AccountCreationConfirmation : MonoBehaviour {
 
     public Text PasswordWarning;
     public Text userExistWarning;
-    public Text emailWarning;
 
     public void checkCofirmNew()
     {
         string name = nameField.text;
-        string email = emailField.text;
         string p = passField.text;
         string pc = passConfirmField.text;
-        bool econ = confirmEmail(email);
         bool ncon = confirmName(name);
         bool pcon = passConfirm(p, pc);
-        if (ncon && pcon && econ)
+        if (ncon && pcon)
         {
+            StartCoroutine(newAccount(name, p));
 
-            //set the games sessions Account
-            GameObject cur = this.gameObject;
-            accountInfo curAccount = cur.GetComponent<accountInfo>();
-            curAccount.newAccount(name, email, p);
-
-            accountScreen.SetActive(false);
-            mainScreen.SetActive(true);
         }
 
     }
+
+   /**
+   *will signal database to allocate new memory for a new account
+   */
+    IEnumerator newAccount(string name, string pass)
+    {
+        string post_url = "http://proj-309-38.cs.iastate.edu/php/createaccount.php?" + "username=" + WWW.EscapeURL(name) + "&password=" + pass; 
+        WWW pStat_check = new WWW(post_url);
+        yield return pStat_check;
+        string confirmName = pStat_check.text;
+
+        //account created
+        if (confirmName.Equals("success"))
+        {
+            //set the games sessions Account
+            GameObject cur = this.gameObject;
+            accountInfo curAccount = cur.GetComponent<accountInfo>();
+            curAccount.newAccount(name, pass);
+
+            //account created successfully transistion to next screen
+            accountScreen.SetActive(false);
+            mainScreen.SetActive(true);
+        }
+        //username in use
+        else if(confirmName.Equals("userexists"))
+        {
+            userExistWarning.text = "user name already in use";
+        }
+        //server problem
+        else
+        {
+            userExistWarning.text = "problem creating account";
+        }
+    }
+
 
     /**
     *varifys that the given name is acceptable and not already in use
     */
     public bool confirmName(string name)
     {
-
-        //will needed to do data base stuff with this but for now will do basic checks
-
-
         if(name.Length <= 0)
         {
             userExistWarning.text = "no user name entered";
@@ -138,29 +159,4 @@ public class AccountCreationConfirmation : MonoBehaviour {
         return false;
     }
 
-    /**
-    *checks email to see if it is of standard form... word@word
-    */
-    public bool confirmEmail(string email)
-    {
-        int split = -1;
-        for(int i = 0; i < email.Length; i++)
-        {
-            if(email[i] == '@'){
-                split = i;
-                break;
-            }
-        }
-
-        //if split != -1 then @ was found and if its index is not at the ends of the email
-        //string then the email is assumed to be formatted fine.
-        if(split <= 0 || split == email.Length-1)
-        {
-            emailWarning.text = "bad email given";
-            return false;
-        }
-
-        emailWarning.text = "";
-        return true;
-    }
 }
