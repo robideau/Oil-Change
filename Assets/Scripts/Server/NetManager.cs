@@ -4,7 +4,7 @@
  * This script handles peer-to-peer server initialization, connection, and synchronization during gameplay.
  * Hosting is handled using the Unity MasterServer - by default hosted by Unity, but can be hosted locally
  *
- * Last update - 3/21/2016
+ * Last update - 3/23/2016
  */
 
 using UnityEngine;
@@ -14,6 +14,7 @@ public class NetManager : MonoBehaviour {
 
 	//Game tracker - synchronizes player data with server as needed
 	public GameObject GameTracker;
+	public TransitionHandler transitionHandler;
 
 	//Game name and room name - room name can be modified by host player in game settings
 	private const string typeName = "OilChangeSession";
@@ -102,12 +103,14 @@ public class NetManager : MonoBehaviour {
 	//Called automatically upon connection
 	void OnConnectedToServer() {
 		print ("Server joined.");
-		GameTracker.SetActive (true);
+		//GameTracker.SetActive (true);
+		transitionHandler.playerConnected = true;
 	}
 
 	void OnPlayerConnected() {
 		print ("Player joined your server.");
-		GameTracker.SetActive (true);
+		//GameTracker.SetActive (true);
+		transitionHandler.playerConnected = true;
 	}
 
 	//Called on destruction of NetworkManager object - disconnect, clear ports, etc.

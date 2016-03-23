@@ -7,6 +7,7 @@
  * Last update - 3/22/2016
  */
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class TransitionHandler : MonoBehaviour {
@@ -18,6 +19,11 @@ public class TransitionHandler : MonoBehaviour {
 	//Network manager and data to handle initial connection
 	public NetManager netManager;
 	public GameObject connectionData;
+	public bool playerConnected;
+
+	//Player info
+	private string playerNameA = "";
+	private string playerNameB = "";
 
 	//Track scanner and replicator
 	public TrackScanner scanner;
@@ -26,42 +32,81 @@ public class TransitionHandler : MonoBehaviour {
 	//Track data sender
 	public SendData dataSender;
 
+	//Game stat tracker
+	public GameTracker gameTracker;
+
 	//Canvas items
 	public ModularChat chat;
-	public GameObject timer;
+	public Text buildTimer;
+
+	//Build mode timer info
+	public float buildTimeLimit = 10;
+	private string defaultBuildTimerText;
+	private float startTime;
+	private bool buildTimerActive = false;
+	private bool buildTimerComplete = false;
 
 	//Track data to be sent between players
 	private string trackData;
 
 	void Awake() {
 		//Retrieve network data, create connection
+		//playerNameA = host player name
+		//playerNameB = connecting player name
+		//chat.setSenderIDs(playerNameA, playerNameB);
 
-		//Transition to build mode
-		//buildMode ();
+		//Transition to build mode, activate timer
+		defaultBuildTimerText = buildTimer.text;
+		buildTimerActive = true;
+		StartCoroutine (buildMode ());
 	}
 
-	private void buildMode() {
-		//Wait for players to finish
+	void Update() {
 
-		//Scan track, send data
-		scanner.scanLevelData();
-		scanner.cleanObjectNames ();
-		trackData = scanner.getScannedLevelData ();
+		//Update build mode timer
+		if (buildTimerActive && playerConnected) {
+			if (buildTimer.text == defaultBuildTimerText) {
+				startTime = Time.time;
+			}
+			if (buildTimer.text == "Remaining: 00:00") {
+				buildTimer.text = "Time's up!";
+				buildTimerActive = false;
+				buildTimerComplete = true;
+			} else {
+				updateBuildTimer ();
+			}
+		}
+			
+	}
+
+	private IEnumerator buildMode() {
+		//Wait for players to finish or time to run out
+		while (!buildTimerComplete) {
+			yield return new WaitForSeconds (1);
+		}
+
+		//Scan track, send data, clear scene
+		dataSender.writeData();
+		//trackData = result of RPC call during writeData()
 
 		//Deactivate build mode components
 		buildModeComponents.SetActive(false);
 
 		//Transition to race mode
-		raceMode();
+		StartCoroutine(raceMode());
+		yield return null;
 	}
 
-	private void raceMode() {
-		//Relocate car to start point
+	private IEnumerator raceMode() {
+		//Activate race mode components
+
+		//Relocate car to start point, set active
 
 		//Replicate track
 		replicator.replicateTrack(trackData);
 
-		//Reset timer
+		//Reset timer, start game tracker
+		gameTracker.gameObject.SetActive(true);
 
 		//Collapse chat
 		chat.ChatUI.SetActive(false);
@@ -69,5 +114,14 @@ public class TransitionHandler : MonoBehaviour {
 		//Wait for players to finish
 
 		//Determine scores and send to final screen
+
+		yield return null;
+	}
+
+	private void updateBuildTimer() {
+		float timerTime = buildTimeLimit - (Time.time - startTime);
+		int minutes = (int)timerTime / 60;
+		int seconds = (int)timerTime % 60;
+		buildTimer.text = string.Format ("Remaining: {0:00}:{1:00}", minutes, seconds);
 	}
 }

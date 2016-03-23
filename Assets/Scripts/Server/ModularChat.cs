@@ -4,7 +4,7 @@
  * This script implements player chat in a way that can be utilized in both build and play mode.
  * Will leave as open-ended as possible for future use.
  *
- * Last update - 3/7/2016
+ * Last update - 3/23/2016
  */
 
 using UnityEngine;
@@ -26,6 +26,8 @@ public class ModularChat : MonoBehaviour {
 	//Message data
 	private string senderID = "Unknown";
 	private List<chatMessage> messageLog;
+	private string senderIDA = "PlayerA";
+	private string senderIDB = "PlayerB";
 
 	//Reference to player car - build mode only
 	public PlayerCarController playerCarController = null;
@@ -81,10 +83,15 @@ public class ModularChat : MonoBehaviour {
 	//Assign sender IDs - replace with actual user data when ready
 	private void assignSenderIDs() {
 		if (nv.isMine) {
-			senderID = "Player A";
+			senderID = senderIDA;
 		} else {
-			senderID = "Player B";
+			senderID = senderIDB;
 		}
+	}
+
+	public void setSenderIDs(string playerNameA, string playerNameB) {
+		senderIDA = playerNameA;
+		senderIDB = playerNameB;
 	}
 
 	//RPC to update chat log
