@@ -19,28 +19,55 @@ public class TransitionHandler : MonoBehaviour {
 	public NetManager netManager;
 	public GameObject connectionData;
 
-	void Awake() {
-		//TODO - retrieve network data, create connection
+	//Track scanner and replicator
+	public TrackScanner scanner;
+	public TrackReplicator replicator;
 
+	//Track data sender
+	public SendData dataSender;
+
+	//Canvas items
+	public ModularChat chat;
+	public GameObject timer;
+
+	//Track data to be sent between players
+	private string trackData;
+
+	void Awake() {
+		//Retrieve network data, create connection
+
+		//Transition to build mode
 		buildMode ();
 	}
 
 	private void buildMode() {
+		//Wait for players to finish
 
-
+		//Scan track, send data
+		scanner.scanLevelData();
+		scanner.cleanObjectNames ();
+		trackData = scanner.getScannedLevelData ();
 
 		//Deactivate build mode components
+		buildModeComponents.SetActive(false);
 
+		//Transition to race mode
+		raceMode();
 	}
 
 	private void raceMode() {
 		//Relocate car to start point
 
 		//Replicate track
+		replicator.replicateTrack(trackData);
 
 		//Reset timer
 
-		//Collapse chat (if necessary)
+		//Collapse chat
+		chat.ChatUI.SetActive(false);
 
+		//Wait for players to finish
+
+		//Determine scores and send to final screen
 	}
 }
