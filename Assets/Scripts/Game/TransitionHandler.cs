@@ -37,7 +37,7 @@ public class TransitionHandler : MonoBehaviour {
 		//Retrieve network data, create connection
 
 		//Transition to build mode
-		buildMode ();
+		//buildMode ();
 	}
 
 	private void buildMode() {

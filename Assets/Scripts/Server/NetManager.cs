@@ -28,6 +28,15 @@ public class NetManager : MonoBehaviour {
 	//Hostlist - used to connect to specific server
 	private HostData[] hostList;
 
+	void Awake() {
+		Network.natFacilitatorIP = masterServerIP;
+		Network.natFacilitatorPort = 50005;
+		if (useLocalMasterServer) {
+			MasterServer.ipAddress = masterServerIP;
+		}
+		MasterServer.port = masterServerPort;
+	}
+
 	//First routine called by server
 	private void StartServer() {
 		Network.natFacilitatorIP = masterServerIP;
@@ -55,6 +64,7 @@ public class NetManager : MonoBehaviour {
 
 	//Displays network GUI - for debug only, player will not see this
 
+	/*
 	void OnGUI() {
 		if (!Network.isClient && !Network.isServer) { //If not currently connected to a server
 			if (GUI.Button (new Rect (100, 100, 200, 100), "Run StartServer()")) {
@@ -69,7 +79,7 @@ public class NetManager : MonoBehaviour {
 				}
 			}
 		}
-	}
+	}*/
 
 	//Request list of Oil Change sessions available to join
 	void RefreshHostList() {
@@ -104,5 +114,22 @@ public class NetManager : MonoBehaviour {
 	void OnDestroy() {
 		Network.Disconnect();
 		MasterServer.ClearHostList ();
+	}
+
+	//Debug only - delete when functional
+	void Update() {
+		if (Input.GetKeyDown ("1")) {
+			print (1);
+			StartServer ();
+		}
+		if (Input.GetKeyDown ("2")) {
+			print (2);
+			RefreshHostList ();
+		}
+		if (Input.GetKeyDown ("3")) {
+			print(3);
+			JoinServer(hostList[0]);
+		}
+
 	}
 }
