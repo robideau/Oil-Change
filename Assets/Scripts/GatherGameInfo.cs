@@ -17,7 +17,7 @@ public class GatherGameInfo : MonoBehaviour {
     public InputField gameName;
     public Text keys;
     public accountInfo player;
-
+	public GameObject sessionData;
 
     public GameObject prefab;
     GameObject prefabclone;
@@ -38,19 +38,25 @@ public class GatherGameInfo : MonoBehaviour {
         prefabclone.transform.SetParent(prefabParent.transform);
 
         playableGame reference = prefabclone.GetComponent<playableGame>();
+		playableGame hostGame = sessionData.GetComponent<playableGame> ();
         //set the BuildLimit for this playableGame
         reference.setBuildLimit(Int32.Parse(placeLimit.captionText.text));
+		hostGame.setBuildLimit(Int32.Parse(placeLimit.captionText.text));
         //set the play time for this playableGame in seconds
         string minTime = Regex.Match(timeLimit.captionText.text, @"\d+").Value;
         reference.setBuildTime(Int32.Parse(minTime)*60);
+		hostGame.setBuildTime(Int32.Parse(minTime)*60);
         //set the name for this game
         reference.setName(gameName.text);
+		hostGame.setName (gameName.text);
         //break they keys text down into an array that will be deep copied into the playable game
         string keysToAdd = keys.text;
         char[] delim = { ',', ' ', '\n' };
         string[] keycollection = keysToAdd.Split(delim);
         reference.setKeys(keycollection);
 
+		hostGame.setHost (player.getName ());
+		reference.setHost (player.getName ());
 
         //update the prefabs text to clearly display the game information
         prefabclone.name = "game by " + player.getName() ;

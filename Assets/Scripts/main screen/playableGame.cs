@@ -3,7 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class playableGame : MonoBehaviour {
-    /**
+	void Awake()
+	{
+		DontDestroyOnLoad(this.gameObject);
+	}
+
+	/**
     *
     *name for this playable game
     *

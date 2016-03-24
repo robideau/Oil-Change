@@ -63,6 +63,8 @@ public class TransitionHandler : MonoBehaviour {
 		buildTimerActive = true;
 		buildModeActive = true;
 		StartCoroutine (buildMode ());
+
+		connectionData = GameObject.Find ("SessionData");
 	}
 
 	void Update() {
