@@ -39,6 +39,7 @@ public class TrackScanner : MonoBehaviour {
 
 	//Whether or not trackscanner is currently scanning
 	private bool scanning = false;
+	public bool deleteOnScan = false;
 
 	//Scan delay - small delay to be inserted after each scan iteration to allow collisions to register
 	public float scanDelay;
@@ -114,7 +115,9 @@ public class TrackScanner : MonoBehaviour {
 				scannedLevelData += other.transform.position + "\n";
 				scannedLevelData += "(" + other.transform.lossyScale.x + ", " + other.transform.lossyScale.y + ", " + other.transform.lossyScale.z + ")" + "\n";
 				scannedLevelData += other.transform.rotation + "\n";
-				Destroy (other.gameObject);
+				if (deleteOnScan) {
+					Destroy (other.gameObject);
+				}
 			}
 		}
 	}
@@ -124,7 +127,7 @@ public class TrackScanner : MonoBehaviour {
 	//Trims strings at first space - VERY IMPORTANT: DO NOT USE SPACES IN PREFAB NAMES
 	public void cleanObjectNames() {
 		string[] stringLines = scannedLevelData.Split (delimiter);
-		scannedLevelData = "";
+		//scannedLevelData = "";
 		for (int i = 0; i < stringLines.Length; i++) {
 			if (i % 4 == 0) {
 				string[] tokens = stringLines [i].Split ('(');
@@ -145,6 +148,26 @@ public class TrackScanner : MonoBehaviour {
 
 	public string getScannedLevelData() {
 		return scannedLevelData;
+	}
+
+	//Determine whether or not mandatory pieces have been placed (start and finish)
+	public bool requiredPiecesPlaced() {
+		string[] tokens = scannedLevelData.Split ('\n');
+		bool finishPlaced = false;
+		bool startPlaced = false;
+		for (int i = 0; i < tokens.Length; i++) {
+			if (tokens [i].StartsWith ("Finish")) {
+				finishPlaced = true;
+			}
+			if (tokens [i].StartsWith ("Start")) {
+				startPlaced = true;
+			}
+		}
+		if (finishPlaced && startPlaced) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 		
 }

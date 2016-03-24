@@ -34,6 +34,8 @@ public class TransitionHandler : MonoBehaviour {
 
 	//Game stat tracker
 	public GameTracker gameTracker;
+	public bool buildModeActive = false;
+	public bool raceModeActive = false;
 
 	//Canvas items
 	public ModularChat chat;
@@ -59,6 +61,7 @@ public class TransitionHandler : MonoBehaviour {
 		//Transition to build mode, activate timer
 		defaultBuildTimerText = buildTimer.text;
 		buildTimerActive = true;
+		buildModeActive = true;
 		StartCoroutine (buildMode ());
 	}
 
@@ -87,6 +90,7 @@ public class TransitionHandler : MonoBehaviour {
 		}
 
 		//Scan track, send data, clear scene
+		scanner.deleteOnScan = true;
 		dataSender.writeData();
 
 		//Retrieve other player's track data
@@ -99,6 +103,8 @@ public class TransitionHandler : MonoBehaviour {
 		buildModeComponents.SetActive(false);
 
 		//Transition to race mode
+		buildModeActive = false;
+		raceModeActive = true;
 		StartCoroutine(raceMode());
 		yield return null;
 	}
