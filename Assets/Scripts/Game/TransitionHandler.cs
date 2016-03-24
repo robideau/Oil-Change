@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 3/22/2016
+ * Last update - 3/24/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
