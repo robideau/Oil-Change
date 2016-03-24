@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
 
 /**
 *created by Ryan Young march 8.
@@ -13,13 +14,13 @@ public class managePlayableGameDisplay : MonoBehaviour {
 
     public GameObject parent;
     //the available playable games will need to be analyzed and loaded in the the games array
-    private playableGame[] games;
+    private List<playableGame> games;
 
     public Dropdown sortOption;
     public Toggle reverse;
 
-    public int sortType = 0;
-    public int reverseMod = 1;
+    private int sortType = 0;
+    private int reverseMod = 1;
 
     //sort the playableGame list based on sort option
     //calls updateList and updateDisplay for most uptoDate information
@@ -29,7 +30,7 @@ public class managePlayableGameDisplay : MonoBehaviour {
         checkSort();
 
         //decided to do a mergeSort for this sort.
-        mergeSortRec(0, games.Length-1);
+		mergeSortRec(0, games.Count-1);
 
 
         upDateDisplay();
@@ -182,11 +183,28 @@ public class managePlayableGameDisplay : MonoBehaviour {
     }
 
     //update the list of playable games
-    private void upDateList()
+    IEnumerator upDateList()
     {
         //still need to fetch all data for all playable games
+        string url = "http://proj-309-38.cs.iastate.edu/php/login.php?" + "sortBy=hostUser" + "&reverse=FALSE" + "&searchUser=" + "";
+        WWW g_list = new WWW(url);
+        yield return g_list;
 
-
+        //break the strings down for reading
+        string[] each_session = g_list.text.Split("\n"[0]);
+        for(int i = 0; i < each_session.Length; i++)
+        {
+            playableGame input = new playableGame();
+            string[] session_breakdown = each_session[i].Split(";"[0]);
+            input.setName(session_breakdown[0]);
+            input.setHost(session_breakdown[1]);
+            input.setBuildTime(Int32.Parse(session_breakdown[2]));
+            input.setBuildLimit(Int32.Parse(session_breakdown[3]));
+            char[] delim = { ',', ' ', '\n' };
+            string[] keys = each_session[4].Split(delim);
+            input.setKeys(keys);
+            input.setPass(session_breakdown[5]);
+        }
 
     }
 

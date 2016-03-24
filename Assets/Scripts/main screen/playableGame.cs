@@ -49,6 +49,8 @@ public class playableGame : MonoBehaviour {
     */
     private int keySize = 10;
 
+    private string password;
+
     //need to add array of game mods?
     //should password go here?
 
@@ -73,12 +75,13 @@ public class playableGame : MonoBehaviour {
     *host = player name who made this match
     *
     */
-    public playableGame(string gameName, int buildTime, int buildLimit, string host)
+    public playableGame(string gameName, int buildTime, int buildLimit, string host, string password)
     {
         this.gameName = gameName;
         this.buildTime = buildTime;
         this.buildLimit = buildLimit;
         this.host = host;
+        this.password = password;
     }
 
     /**
@@ -124,6 +127,11 @@ public class playableGame : MonoBehaviour {
         {
             keywords[i] = keys[i];
         }
+    }
+
+    public void setPass(string pass)
+    {
+        password = pass;
     }
 
     /**
@@ -174,6 +182,21 @@ public class playableGame : MonoBehaviour {
     public int getBuildTime()
     {
         return buildTime;
+    }
+
+    public string getPass()
+    {
+        return password;
+    }
+
+    public void reset()
+    {
+        gameName = null;
+        buildTime = 120;
+        buildLimit = 30;
+        host = null;
+        keywords = null;
+        password = null;
     }
 
     /**
