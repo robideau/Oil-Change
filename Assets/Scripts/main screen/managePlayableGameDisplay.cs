@@ -30,7 +30,7 @@ public class managePlayableGameDisplay : MonoBehaviour {
         checkSort();
 
         //decided to do a mergeSort for this sort.
-        mergeSortRec(0, games.Length-1);
+		mergeSortRec(0, games.Count-1);
 
 
         upDateDisplay();
