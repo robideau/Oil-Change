@@ -18,8 +18,13 @@ public class TransitionHandler : MonoBehaviour {
 
 	//Network manager and data to handle initial connection
 	public NetManager netManager;
+	private NetworkView nv;
 	public GameObject connectionData;
 	public bool playerConnected;
+
+	//Build mode status indicators
+	public BuildTracker buildTracker;
+	public Text buildStatus;
 
 	//Player info
 	private string playerNameA = "";
@@ -40,7 +45,7 @@ public class TransitionHandler : MonoBehaviour {
 	//Canvas items
 	public ModularChat chat;
 	public Text buildTimer;
-	public Text buildStatusText;
+	public Text submissionStatus;
 
 	//Build mode timer info
 	public float buildTimeLimit = 10;
@@ -57,6 +62,7 @@ public class TransitionHandler : MonoBehaviour {
 		//playerNameA = host player name
 		//playerNameB = connecting player name
 		//chat.setSenderIDs(playerNameA, playerNameB);
+		nv = netManager.GetComponent<NetworkView>();
 
 		//Transition to build mode, activate timer
 		defaultBuildTimerText = buildTimer.text;
@@ -78,31 +84,57 @@ public class TransitionHandler : MonoBehaviour {
 				buildTimer.text = "Time's up!";
 				buildTimerActive = false;
 				buildTimerComplete = true;
+				//Eject to main menu, display message stating that one or more playeers did not finish
 			} else {
 				updateBuildTimer ();
 			}
 		}
+
+		if (Input.GetKeyDown ("q")) {
+			//StartCoroutine (testScanner ());
+			StartCoroutine (buildMode ());
+		}
 			
+	}
+
+	private IEnumerator testScanner() {
+		StartCoroutine (scanner.QuickProcessTrack ());
+		yield return new WaitForSeconds (2);
+		scanner.cleanObjectNames ();
+		yield return new WaitForSeconds (1);
+		print (scanner.getScannedLevelData ());
 	}
 
 	private IEnumerator buildMode() {
 		//Wait for players to finish or time to run out
-		while (!buildTimerComplete) {
+		while (!buildTimerComplete && !(buildStatus.text == "Opponent has finished building." && buildTracker.submitConditionsCheck())) {
 			yield return new WaitForSeconds (1);
 		}
 
 		//Scan track, send data, clear scene
 		scanner.deleteOnScan = true;
-		dataSender.writeData();
+		StartCoroutine(dataSender.writeData());
+		yield return new WaitForSeconds (3);
 
-		//Retrieve other player's track data
-		while (trackData != "Data not received.") {
-			trackData = dataSender.getReceivedData ();
-		}
+		trackData = dataSender.getReceivedData ();
 
 		//Deactivate build mode components
+		while (GameObject.FindGameObjectWithTag ("BuildObject") != null) {
+			Destroy(GameObject.FindGameObjectWithTag("BuildObject"));
+			yield return null;
+		}
+		while (GameObject.FindGameObjectWithTag ("Finish") != null) {
+			Destroy(GameObject.FindGameObjectWithTag("Finish"));
+			yield return null;
+		}
+		while (GameObject.FindGameObjectWithTag ("Start") != null) {
+			Destroy(GameObject.FindGameObjectWithTag("Start"));
+			yield return null;
+		}
 		buildTimer.gameObject.SetActive(false);
+		buildStatus.gameObject.SetActive (false);
 		buildModeComponents.SetActive(false);
+		submissionStatus.gameObject.SetActive (false);
 
 		//Transition to race mode
 		buildModeActive = false;

@@ -7,6 +7,7 @@ public class testButtonClicked : MonoBehaviour {
 	public GameObject carPrefab;
 	public Vector3 startingPos;
 	public Quaternion startingRot;
+	public ObjectController objectController;
 
 	void Start()
 	{
@@ -19,6 +20,7 @@ public class testButtonClicked : MonoBehaviour {
 		carPrefab.transform.position = startingPos;
 		carPrefab.transform.rotation = startingRot;
 		carPrefab.SetActive(true);
+		carPrefab.GetComponent<PlayerCarController> ().hasFinished = false;
 		mainCamera.SetActive(false);
 	}
 
@@ -28,6 +30,10 @@ public class testButtonClicked : MonoBehaviour {
 		{
 			carPrefab.SetActive(false);
 			mainCamera.SetActive(true);
+		}
+			
+		if (carPrefab.GetComponent<PlayerCarController> ().hasFinished) {
+			objectController.resetNewPiecesFlag ();
 		}
 	}
 }

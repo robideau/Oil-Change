@@ -9,13 +9,15 @@
  * 				3: scale
  * 				4: rotation
  *
- * Last update - 3/21/2016
+ * Last update - 3/24/2016
  */
 
 using UnityEngine;
 using System.Collections;
 
 public class TrackScanner : MonoBehaviour {
+
+	public SendData dataSender;
 
 	//Output filename
 	public string outputFile;
@@ -39,7 +41,7 @@ public class TrackScanner : MonoBehaviour {
 
 	//Whether or not trackscanner is currently scanning
 	private bool scanning = false;
-	public bool deleteOnScan = false;
+	public bool deleteOnScan;
 
 	//Scan delay - small delay to be inserted after each scan iteration to allow collisions to register
 	public float scanDelay;
@@ -49,6 +51,7 @@ public class TrackScanner : MonoBehaviour {
 	private char delimiter = '\n';
 
 	void Start () {
+		deleteOnScan = false;
 		gridCollider = worldGrid.GetComponent<BoxCollider> ();
 		gridBlockSize = objectController.gridBlockSize;
 		//Set TrackScanner position to lowest X and Z position corner of world grid at base Y value
@@ -71,7 +74,7 @@ public class TrackScanner : MonoBehaviour {
 	 */
 	public IEnumerator ProcessTrack() {
 		scanning = true; //begin scanning - record trigger collisions
-
+		GetComponent<BoxCollider>().enabled = true;
 		//Iterate through all grid spaces
 		for (int i = 0; i < gridYSpaces; i++) {
 			transform.position = new Vector3(transform.position.x, transform.position.y, startZ);
@@ -89,13 +92,16 @@ public class TrackScanner : MonoBehaviour {
 		}
 			
 		scanning = false;
+		GetComponent<BoxCollider> ().enabled = false;
 		print ("Scan complete.");
 		yield return null;
 	}
 
 	//A (much) quicker version of ProcessTrack() - to be used as default unless we start running into issues.
 	public IEnumerator QuickProcessTrack() {
+		scannedLevelData = "";
 		scanning = true;
+		GetComponent<BoxCollider>().enabled = true;
 		GetComponent<BoxCollider> ().size = new Vector3 (gridXSpaces * gridBlockSize, 1, gridZSpaces * gridBlockSize);
 		transform.position = new Vector3 (0, baseY - 1, 0);
 		while (transform.position.y < yIncrements * gridYSpaces) {
@@ -103,6 +109,7 @@ public class TrackScanner : MonoBehaviour {
 			yield return new WaitForSeconds (scanDelay);
 		}
 		scanning = false;
+		GetComponent<BoxCollider> ().enabled = false;
 		print ("Quick scan complete.");
 		yield return null;
 	}
@@ -127,8 +134,8 @@ public class TrackScanner : MonoBehaviour {
 	//Trims strings at first space - VERY IMPORTANT: DO NOT USE SPACES IN PREFAB NAMES
 	public void cleanObjectNames() {
 		string[] stringLines = scannedLevelData.Split (delimiter);
-		//scannedLevelData = "";
-		for (int i = 0; i < stringLines.Length; i++) {
+		scannedLevelData = "";
+		for (int i = 0; i < stringLines.Length-1; i++) {
 			if (i % 4 == 0) {
 				string[] tokens = stringLines [i].Split ('(');
 				scannedLevelData += (tokens [0].Trim() + "\n");
@@ -136,6 +143,7 @@ public class TrackScanner : MonoBehaviour {
 				scannedLevelData += (stringLines [i] + "\n");
 			}
 		}
+		transform.position = new Vector3 (startX, baseY, startZ);
 	}
 
 	public bool IsScanning() {

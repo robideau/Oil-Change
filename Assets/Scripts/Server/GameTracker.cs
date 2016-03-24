@@ -46,6 +46,7 @@ public class GameTracker : MonoBehaviour {
 			updateTimer ();
 		}
 
+		/*
 		//Debug only - replace with "finish" event later
 		if (playerCar.GetComponent<PlayerCarController>().hasFinished && isPlaying) {
 			stopTimer ();
@@ -58,7 +59,7 @@ public class GameTracker : MonoBehaviour {
 				opponentName = "Player B";
 			}
 			nv.RPC ("broadcastPlayerFinished", RPCMode.Others, opponentName); //broadcast to opponent
-		}
+		}*/
 	}
 
 	//Start timer, enable player movement

@@ -3,7 +3,7 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 3/9/2016
+ * Last update - 3/24/2016
  */
 
 using UnityEngine;
@@ -20,6 +20,8 @@ public class ObjectController : MonoBehaviour {
 	private bool buildMenuTestDir;
 	private string prefabsDirectory;
 	private Vector3 hitPoint;
+
+	private bool newPiecePlaced = false;
 
 	void Start () {
 		currentObject = null;
@@ -38,6 +40,7 @@ public class ObjectController : MonoBehaviour {
 		if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
 			currentObject = null;
+			newPiecePlaced = true;
 		}
 
 		// If currentObject exists
@@ -74,4 +77,13 @@ public class ObjectController : MonoBehaviour {
 			Destroy(currentObject);
 		currentObject = (GameObject) Instantiate(toInstantiate, hitPoint, Quaternion.identity);
 	}
+
+	public bool isNewPiecesPlaced() {
+		return newPiecePlaced;
+	}
+
+	public void resetNewPiecesFlag() {
+		newPiecePlaced = false;
+	}
+
 }
