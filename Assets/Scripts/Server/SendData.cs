@@ -13,6 +13,7 @@ using System.Text;
 public class SendData  : MonoBehaviour {
 	private string dataToSend;
 	private byte[] dataBytes;
+	private string receivedData = "";
 	public NetworkView nView;
 	public TrackScanner ts;
 
@@ -57,7 +58,18 @@ public class SendData  : MonoBehaviour {
 		string result = new string (chars);
 		//print result to console log for debugging
 		//Debug.Log(result);
+		receivedData = result;
 		return result;
 	}
+
+	public string getReceivedData() {
+		if (receivedData != "") {
+			return receivedData;
+		}
+		else {
+			return "Data not received.";
+		}
+	}
+
 
 }

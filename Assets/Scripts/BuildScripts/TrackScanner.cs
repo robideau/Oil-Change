@@ -114,6 +114,7 @@ public class TrackScanner : MonoBehaviour {
 				scannedLevelData += other.transform.position + "\n";
 				scannedLevelData += "(" + other.transform.lossyScale.x + ", " + other.transform.lossyScale.y + ", " + other.transform.lossyScale.z + ")" + "\n";
 				scannedLevelData += other.transform.rotation + "\n";
+				Destroy (other.gameObject);
 			}
 		}
 	}

@@ -38,6 +38,7 @@ public class TransitionHandler : MonoBehaviour {
 	//Canvas items
 	public ModularChat chat;
 	public Text buildTimer;
+	public Text buildStatusText;
 
 	//Build mode timer info
 	public float buildTimeLimit = 10;
@@ -47,7 +48,7 @@ public class TransitionHandler : MonoBehaviour {
 	private bool buildTimerComplete = false;
 
 	//Track data to be sent between players
-	private string trackData;
+	private string trackData = "Data not received.";
 
 	void Awake() {
 		//Retrieve network data, create connection
@@ -87,9 +88,14 @@ public class TransitionHandler : MonoBehaviour {
 
 		//Scan track, send data, clear scene
 		dataSender.writeData();
-		//trackData = result of RPC call during writeData()
+
+		//Retrieve other player's track data
+		while (trackData != "Data not received.") {
+			trackData = dataSender.getReceivedData ();
+		}
 
 		//Deactivate build mode components
+		buildTimer.gameObject.SetActive(false);
 		buildModeComponents.SetActive(false);
 
 		//Transition to race mode
@@ -100,10 +106,11 @@ public class TransitionHandler : MonoBehaviour {
 	private IEnumerator raceMode() {
 		//Activate race mode components
 
-		//Relocate car to start point, set active
-
 		//Replicate track
 		replicator.replicateTrack(trackData);
+
+		//Relocate car to start point, set active
+		gameTracker.playerCar.SetActive(true);
 
 		//Reset timer, start game tracker
 		gameTracker.gameObject.SetActive(true);
