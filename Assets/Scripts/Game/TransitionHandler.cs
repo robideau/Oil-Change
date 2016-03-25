@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 3/24/2016
+ * Last update - 3/25/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,8 +27,8 @@ public class TransitionHandler : MonoBehaviour {
 	public Text buildStatus;
 
 	//Player info
-	private string playerNameA = "";
-	private string playerNameB = "";
+	//private string playerNameA = "";
+	//private string playerNameB = "";
 
 	//Track scanner and replicator
 	public TrackScanner scanner;

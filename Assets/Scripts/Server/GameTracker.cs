@@ -3,8 +3,11 @@
  * 
  * This script tracks game data and handles server updates - timers, ghost data, etc.
  *
- * Last update - 3/3/2016
+ * Last update - 3/25/2016
  */
+
+//Warnings to ignore - DEV ONLY, REMOVE FOR FINAL BUILDS
+#pragma warning disable 0618 //deprecated network view
 
 using UnityEngine;
 using System.Collections;

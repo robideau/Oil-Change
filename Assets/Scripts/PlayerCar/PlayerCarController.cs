@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 3/1/2016
+ * Last update - 3/25/2016
  */
 
 using UnityEngine;
@@ -81,6 +81,10 @@ public class PlayerCarController : MonoBehaviour {
 
 		movementEnabled = true;
 			
+		//Locate start position
+		if (GameObject.FindGameObjectWithTag ("Start") != null) {
+			transform.position = GameObject.FindGameObjectWithTag ("Start").transform.position;
+		}
 	}
 
 	void Update () {
