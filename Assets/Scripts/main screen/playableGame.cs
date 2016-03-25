@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/**
+*create by Ryan Young
+    last updated 3/24/16
+*/
 public class playableGame : MonoBehaviour {
 	void Awake()
 	{

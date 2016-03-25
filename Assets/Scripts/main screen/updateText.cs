@@ -13,7 +13,6 @@ public class updateText : MonoBehaviour {
     public Text gameName;
     public Text hostName;
     public Text keyWords;
-    public Text ping;
 
     public Text buildTime;
     public Text buildLimit;
@@ -28,11 +27,10 @@ public class updateText : MonoBehaviour {
     
     //for not opted agains this since I wanted the functionality first.
     //later if time will bring this back and make expandable options
-   public void updateSimple(string gameN, string hostN, string[] keys, int ping)
+   public void updateSimple(string gameN, string hostN, string[] keys)
     {
         gameName.text = gameN;
         hostName.text = hostN;
-        this.ping.text = ping.ToString();
         keyWords.text = "";
         for(int i = 0; i < keys.Length; i++)
         {
@@ -49,9 +47,9 @@ public class updateText : MonoBehaviour {
     }
     
     //updates and extended playabale game
-    public void updateLarge(string gameN, string hostN, string[] keys, int ping, string limitBuild, string limitTime)
+    public void updateLarge(string gameN, string hostN, string[] keys, string limitBuild, string limitTime)
     {
-        updateSimple(gameN, hostN, keys, ping);
+        updateSimple(gameN, hostN, keys);
 
         buildTime.text = "   time: " + limitTime;
         buildLimit.text = "   items: " + limitBuild;

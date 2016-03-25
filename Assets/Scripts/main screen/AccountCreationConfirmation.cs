@@ -77,14 +77,12 @@ public class AccountCreationConfirmation : MonoBehaviour {
             userExistWarning.text = "no user name entered";
             return false;
         }
-        for (int i = 0; i < name.Length; i++)
+        if (name.Contains(" ") || name.Contains("&") || name.Contains(",") || name.Contains(";") || name.Contains("\t") || name.Contains("\n"))
         {
-            if(name[i] == ' ')
-            {
-                userExistWarning.text = "no white spaces allowed in the username";
-                return false;
-            }
+            userExistWarning.text = "game name cannot contain characters: space, '&', ',', ';', tab, or return";
+            return false;
         }
+        
 
         userExistWarning.text = "";
         return true;
@@ -105,13 +103,19 @@ public class AccountCreationConfirmation : MonoBehaviour {
             PasswordWarning.text = "passwords do not match";
             return false;
         }
-        else if(pass.Length < 8)
+        else if(pass.Length < 8 || pass.Length > 20)
         {
-            PasswordWarning.text = "passwords must be at least 8 characters long";
+            PasswordWarning.text = "passwords must be at least 8 characters long and no more than 20 characters long";
             return false;
         }
 
-        for(int i = 0; i < pass.Length; i++)
+        if (pass.Contains(" ") || pass.Contains("&") || pass.Contains(",") || pass.Contains(";") || pass.Contains("\t") || pass.Contains("\n"))
+        {
+            PasswordWarning.text = "password cannot contain characters: space, '&', ',', ';', tab, or return";
+            return false;
+        }
+
+        for (int i = 0; i < pass.Length; i++)
         {
             if (System.Char.IsLetter(pass[i]) && System.Char.IsLower(pass[i]))
             {

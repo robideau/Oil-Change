@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 /**
-*create by Ryan Young March 2
+*create by Ryan Young
+    last updated 3/22/16
 */
 public class accountInfo : MonoBehaviour {
 
