@@ -17,6 +17,7 @@ public class testButtonClicked : MonoBehaviour {
 
 	// Use this for initialization
 	public void TestMode () {
+		carPrefab.SetActive (false);
 		carPrefab.transform.position = startingPos;
 		carPrefab.transform.rotation = startingRot;
 		carPrefab.SetActive(true);

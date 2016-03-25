@@ -4,7 +4,7 @@
  * This script implements player chat in a way that can be utilized in both build and play mode.
  * Will leave as open-ended as possible for future use.
  *
- * Last update - 3/24/2016
+ * Last update - 3/25/2016
  */
 
 using UnityEngine;
@@ -12,6 +12,9 @@ using UnityEngine.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+//Warnings to ignore - DEV ONLY, REMOVE FOR FINAL BUILDS
+#pragma warning disable 0618 //deprecated network view
 
 public class ModularChat : MonoBehaviour {
 

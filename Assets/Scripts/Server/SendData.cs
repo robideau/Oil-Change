@@ -5,6 +5,9 @@
  * this script will be for sending given data, with a string name for identification to other players via RPC
  */
 
+//Warnings to ignore - DEV ONLY, REMOVE FOR FINAL BUILDS
+#pragma warning disable 0618 //deprecated network view
+
 using UnityEngine;
 using System.Collections;
 using System.Text;
