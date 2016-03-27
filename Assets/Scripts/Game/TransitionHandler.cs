@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 3/25/2016
+ * Last update - 3/27/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,12 +19,16 @@ public class TransitionHandler : MonoBehaviour {
 	//Network manager and data to handle initial connection
 	public NetManager netManager;
 	private NetworkView nv;
-	public GameObject connectionData;
 	public bool playerConnected;
+	public playableGame gameData;
 
 	//Build mode status indicators
 	public BuildTracker buildTracker;
 	public Text buildStatus;
+
+	//Race mode status indicators
+	public Text raceTimer;
+	public Text raceStatus;
 
 	//Player info
 	//private string playerNameA = "";
@@ -49,6 +53,7 @@ public class TransitionHandler : MonoBehaviour {
 
 	//Build mode timer info
 	public float buildTimeLimit = 10;
+	public int buildCountLimit;
 	private string defaultBuildTimerText;
 	private float startTime;
 	private bool buildTimerActive = false;
@@ -59,9 +64,10 @@ public class TransitionHandler : MonoBehaviour {
 
 	void Awake() {
 		//Retrieve network data, create connection
-		//playerNameA = host player name
-		//playerNameB = connecting player name
-		//chat.setSenderIDs(playerNameA, playerNameB);
+		//gameData = GameObject.Find("SessionData").GetComponent<playableGame>();
+		//buildTimeLimit = gameData.getBuildTime ();
+		//buildCountLimit = gameData.getBuildLimit ();
+		// if (is host) { netManager.joinSpecifiedServer(name) }
 		nv = netManager.GetComponent<NetworkView>();
 
 		//Transition to build mode, activate timer
@@ -70,7 +76,6 @@ public class TransitionHandler : MonoBehaviour {
 		buildModeActive = true;
 		StartCoroutine (buildMode ());
 
-		connectionData = GameObject.Find ("SessionData");
 	}
 
 	void Update() {
@@ -88,11 +93,6 @@ public class TransitionHandler : MonoBehaviour {
 			} else {
 				updateBuildTimer ();
 			}
-		}
-
-		if (Input.GetKeyDown ("q")) {
-			//StartCoroutine (testScanner ());
-			StartCoroutine (buildMode ());
 		}
 			
 	}
@@ -144,8 +144,6 @@ public class TransitionHandler : MonoBehaviour {
 	}
 
 	private IEnumerator raceMode() {
-		//Activate race mode components
-
 		//Replicate track
 		replicator.replicateTrack(trackData);
 
@@ -160,6 +158,10 @@ public class TransitionHandler : MonoBehaviour {
 		chat.ChatUI.SetActive(false);
 
 		//Wait for players to finish
+		while (!gameTracker.playerCar.GetComponent<PlayerCarController> ().hasFinished &&
+		       !raceStatus.gameObject.activeSelf) {
+			yield return new WaitForSeconds (1);
+		}
 
 		//Determine scores and send to final screen
 

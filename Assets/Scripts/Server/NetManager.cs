@@ -119,6 +119,19 @@ public class NetManager : MonoBehaviour {
 		MasterServer.ClearHostList ();
 	}
 
+	public void joinSpecifiedServer(string gameName, bool isHost) {
+		if (isHost) {
+			StartServer ();
+		} else {
+			RefreshHostList ();
+			foreach (HostData hostData in hostList) {
+				if (hostData.gameName == gameName) {
+					JoinServer (hostData);
+				}
+			}
+		}
+	}
+
 	//Debug only - delete when functional
 	void Update() {
 		if (Input.GetKeyDown ("1")) {

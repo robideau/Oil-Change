@@ -87,7 +87,9 @@ public class PlayerCarController : MonoBehaviour {
 		//Locate start position
 		if (GameObject.FindGameObjectWithTag ("Start") != null) {
 			transform.position = GameObject.FindGameObjectWithTag ("Start").transform.position;
+			transform.rotation = GameObject.FindGameObjectWithTag ("Start").transform.rotation;
 		}
+		hasFinished = false;
 	}
 
 	void Update () {
@@ -245,7 +247,9 @@ public class PlayerCarController : MonoBehaviour {
 	public void relocateToStart() {
 		if (GameObject.FindGameObjectWithTag ("Start") != null) {
 			transform.position = GameObject.FindGameObjectWithTag ("Start").transform.position;
+			transform.rotation = GameObject.FindGameObjectWithTag ("Start").transform.rotation;
 		}
+		hasFinished = false;
 	}
 }
 
