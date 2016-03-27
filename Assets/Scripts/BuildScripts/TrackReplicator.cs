@@ -29,7 +29,7 @@ public class TrackReplicator : MonoBehaviour {
 				replicatedObject = Instantiate (toInstantiate);
 			} else if (i == 3 || i % 4 == 3) { //Rotation
 				string[] rotationData = (trackDataLines[i].Substring(1, trackDataLines[i].Length-2)).Split(',');
-				//replicatedObject.transform.rotation = new Quaternion (float.Parse (rotationData [0]), float.Parse (rotationData [1]), float.Parse (rotationData [2]), float.Parse (rotationData [3]));
+				replicatedObject.transform.rotation = new Quaternion (float.Parse (rotationData [0]), float.Parse (rotationData [1]), float.Parse (rotationData [2]), float.Parse (rotationData [3]));
 			} else if (i == 2 || i % 4 == 2) { //Scale (lossy)
 				string[] scaleData = (trackDataLines[i].Substring(1, trackDataLines[i].Length-2)).Split(',');
 				replicatedObject.transform.localScale = new Vector3 (float.Parse (scaleData [0]), float.Parse (scaleData [1]), float.Parse (scaleData [2]));

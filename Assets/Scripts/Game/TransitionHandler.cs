@@ -151,6 +151,7 @@ public class TransitionHandler : MonoBehaviour {
 
 		//Relocate car to start point, set active
 		gameTracker.playerCar.SetActive(true);
+		gameTracker.playerCar.GetComponent<PlayerCarController> ().relocateToStart ();
 
 		//Reset timer, start game tracker
 		gameTracker.gameObject.SetActive(true);
