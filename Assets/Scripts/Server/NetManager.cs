@@ -4,7 +4,7 @@
  * This script handles peer-to-peer server initialization, connection, and synchronization during gameplay.
  * Hosting is handled using the Unity MasterServer - by default hosted by Unity, but can be hosted locally
  *
- * Last update - 3/23/2016
+ * Last update - 3/28/2016
  */
 
 using UnityEngine;
@@ -39,7 +39,7 @@ public class NetManager : MonoBehaviour {
 	}
 
 	//First routine called by server
-	private void StartServer() {
+	public void StartServer() {
 		Network.natFacilitatorIP = masterServerIP;
 		Network.natFacilitatorPort = 50005;
 		Network.InitializeServer (2, listeningPort, true); //Initialize server - max. 2 connections, use NAT if public address
@@ -119,14 +119,25 @@ public class NetManager : MonoBehaviour {
 		MasterServer.ClearHostList ();
 	}
 
-	public void joinSpecifiedServer(string gameName, bool isHost) {
+	public IEnumerator joinSpecifiedServer(string gameName, bool isHost) {
 		if (isHost) {
+			this.gameName = gameName;
 			StartServer ();
+			yield return null;
 		} else {
+			yield return new WaitForSeconds (3);
 			RefreshHostList ();
+			yield return new WaitForSeconds (1);
+			MasterServer.ipAddress = masterServerIP;
+			hostList = MasterServer.PollHostList ();
+			if (hostList == null) {
+				print ("Null hostlist");
+			}
 			foreach (HostData hostData in hostList) {
+				print (hostData.gameName);
 				if (hostData.gameName == gameName) {
 					JoinServer (hostData);
+					print ("Joined " + hostData.gameName);
 				}
 			}
 		}

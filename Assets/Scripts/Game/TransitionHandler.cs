@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 3/27/2016
+ * Last update - 3/28/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -64,16 +64,14 @@ public class TransitionHandler : MonoBehaviour {
 
 	void Awake() {
 		//Retrieve network data, create connection
-		//gameData = GameObject.Find("SessionData").GetComponent<playableGame>();
-		//buildTimeLimit = gameData.getBuildTime ();
-		//buildCountLimit = gameData.getBuildLimit ();
-		// if (is host) { netManager.joinSpecifiedServer(name) }
+		gameData = GameObject.Find("SessionData").GetComponent<playableGame>();
+		buildTimeLimit = gameData.getBuildTime ();
+		buildCountLimit = gameData.getBuildLimit ();
+		netManager.gameName = gameData.getName ();
+		StartCoroutine(netManager.joinSpecifiedServer (gameData.getName (), gameData.checkHost ()));
 		nv = netManager.GetComponent<NetworkView>();
 
 		//Transition to build mode, activate timer
-		defaultBuildTimerText = buildTimer.text;
-		buildTimerActive = true;
-		buildModeActive = true;
 		StartCoroutine (buildMode ());
 
 	}
@@ -106,6 +104,26 @@ public class TransitionHandler : MonoBehaviour {
 	}
 
 	private IEnumerator buildMode() {
+		buildStatus.gameObject.SetActive (false);
+		submissionStatus.gameObject.SetActive (false);
+		buildTracker.toggleBuildMenu (false);
+
+		//Wait for connection
+		while (!playerConnected) {
+			yield return new WaitForSeconds (1);
+		}
+
+		buildTracker.toggleBuildMenu (true);
+		buildTimer.gameObject.SetActive(true);
+		buildStatus.gameObject.SetActive (true);
+		buildModeComponents.SetActive(true);
+		submissionStatus.gameObject.SetActive (true);
+
+		//Transition, start timer
+		defaultBuildTimerText = buildTimer.text;
+		buildTimerActive = true;
+		buildModeActive = true;
+
 		//Wait for players to finish or time to run out
 		while (!buildTimerComplete && !(buildStatus.text == "Opponent has finished building." && buildTracker.submitConditionsCheck())) {
 			yield return new WaitForSeconds (1);
