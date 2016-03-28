@@ -53,7 +53,15 @@ public class playableGame : MonoBehaviour {
     */
     private int keySize = 10;
 
+    /**
+    password for this game session
+    */
     private string password;
+
+    /**
+    *verifiy if the game session held is the hosts such that a joinable connection is set up
+    */
+    private bool isHost = false;
 
     //need to add array of game mods?
     //should password go here?
@@ -133,9 +141,20 @@ public class playableGame : MonoBehaviour {
         }
     }
 
+    /**
+    *set the password for this game session
+    */
     public void setPass(string pass)
     {
         password = pass;
+    }
+
+    /**
+    *sets whether this session is a host session
+    */
+    public void establishHost(bool isHost)
+    {
+        this.isHost = isHost;
     }
 
     /**
@@ -188,11 +207,25 @@ public class playableGame : MonoBehaviour {
         return buildTime;
     }
 
+    /**
+    *get the password for this game session
+    */
     public string getPass()
     {
         return password;
     }
 
+    /**
+    *returns true if session is for a host false otherwise
+    */
+    public bool checkHost()
+    {
+        return isHost;
+    }
+
+    /**
+    *reset the information for playable game
+    */
     public void reset()
     {
         gameName = null;

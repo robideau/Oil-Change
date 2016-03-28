@@ -39,7 +39,7 @@ public class managePlayableGameDisplay : MonoBehaviour {
     //calls updateList and updateDisplay for most uptoDate information
     public void upDateGames()
     {
-
+        warning.gameObject.SetActive(false);
         warning.text = "";
         upDateList();
         checkSort();
@@ -212,34 +212,36 @@ public class managePlayableGameDisplay : MonoBehaviour {
                 {
                     continue;
                 }
+                //split up the input
                 playableGame input = new playableGame();
                 string sessionModed = each_session[i].Replace(' ', ',');
                 string[] session_breakdown = sessionModed.Split(";"[0]);
-
+                //game name
                 Debug.Log(session_breakdown[0]);
                 input.setName(session_breakdown[0].Trim(","[0]));
-
+                //host name
                 Debug.Log(session_breakdown[1]);
                 input.setHost(session_breakdown[1].Trim(","[0]));
-
+                //build time
                 Debug.Log(session_breakdown[2]);
                 input.setBuildTime(Int32.Parse(session_breakdown[2].Trim(","[0])));
-
+                //build limit
                 Debug.Log(session_breakdown[3]);
                 input.setBuildLimit(Int32.Parse(session_breakdown[3].Trim(","[0])));
-
+                //keywords
                 Debug.Log(session_breakdown[4]);
                 char[] delim2 = { ',', '\t' };
                 string[] keys = session_breakdown[4].Split(delim2);
                 input.setKeys(keys);
-
+                //password
                 Debug.Log(session_breakdown[5]);
-                input.setPass(session_breakdown[5]);
+                input.setPass(session_breakdown[5].Trim(","[0]));
                 games.Add(input);
             }
         }
         else
         {
+            warning.gameObject.SetActive(true);
             warning.text = "database problem:\n" + g_list.text;
         }
 

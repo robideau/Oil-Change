@@ -81,6 +81,10 @@ public class GatherGameInfo : MonoBehaviour {
 		hostGame.setHost (player.getName ());
         //set the password empty if none
         hostGame.setPass(pass.text);
+        Debug.Log("!" + pass.text + "!");
+        //establish user as host
+        hostGame.establishHost(true);
+
         
         //add game session to database with a password confirmation attatched
         if (pCheck.isOn && !pass.text.Equals(""))
