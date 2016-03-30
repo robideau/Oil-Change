@@ -105,11 +105,11 @@ public class ModularChat : MonoBehaviour {
 	}
 
 	public void disableInput() {
-		chatInput.gameObject.SetActive (false);
+		GUI.FocusControl ("");
 	}
 
 	public void enableInput() {
-		chatInput.gameObject.SetActive (true);
+		GUI.FocusControl (chatInput.name);
 	}
 }
 

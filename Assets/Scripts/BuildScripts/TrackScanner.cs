@@ -9,7 +9,7 @@
  * 				3: scale
  * 				4: rotation
  *
- * Last update - 3/24/2016
+ * Last update - 3/30/2016
  */
 
 using UnityEngine;
@@ -98,7 +98,7 @@ public class TrackScanner : MonoBehaviour {
 	}
 
 	//A (much) quicker version of ProcessTrack() - to be used as default unless we start running into issues.
-	public IEnumerator QuickProcessTrack() {
+	/*public IEnumerator QuickProcessTrack() {
 		scannedLevelData = "";
 		scanning = true;
 		GetComponent<BoxCollider>().enabled = true;
@@ -112,7 +112,42 @@ public class TrackScanner : MonoBehaviour {
 		GetComponent<BoxCollider> ().enabled = false;
 		print ("Quick scan complete.");
 		yield return null;
+	}*/
+
+	//Early implementation of a more stable process track method - ran into issues with original algorithm
+	public IEnumerator QuickProcessTrack() {
+		scannedLevelData = "";
+		scanning = true;
+		GameObject[] detectedObjects = GameObject.FindGameObjectsWithTag ("BuildObject");
+		foreach (GameObject other in detectedObjects) {
+			scannedLevelData += other.gameObject.name + "\n";
+			scannedLevelData += other.transform.position + "\n";
+			scannedLevelData += "(" + other.transform.lossyScale.x + ", " + other.transform.lossyScale.y + ", " + other.transform.lossyScale.z + ")" + "\n";
+			scannedLevelData += other.transform.rotation + "\n";
+			if (deleteOnScan) {
+				Destroy (other.gameObject);
+			}
+		}
+		GameObject start = GameObject.FindGameObjectWithTag ("Start");
+		scannedLevelData += start.gameObject.name + "\n";
+		scannedLevelData += start.transform.position + "\n";
+		scannedLevelData += "(" + start.transform.lossyScale.x + ", " + start.transform.lossyScale.y + ", " + start.transform.lossyScale.z + ")" + "\n";
+		scannedLevelData += start.transform.rotation + "\n";
+		if (deleteOnScan) {
+			Destroy (start.gameObject);
+		}
+		GameObject finish = GameObject.FindGameObjectWithTag ("Finish");
+		scannedLevelData += finish.gameObject.name + "\n";
+		scannedLevelData += finish.transform.position + "\n";
+		scannedLevelData += "(" + finish.transform.lossyScale.x + ", " + finish.transform.lossyScale.y + ", " + finish.transform.lossyScale.z + ")" + "\n";
+		scannedLevelData += finish.transform.rotation + "\n";
+		if (deleteOnScan) {
+			Destroy (finish.gameObject);
+		}
+		yield return null;
 	}
+
+
 
 	void OnTriggerEnter(Collider other) {
 		//If other object is a placed track piece

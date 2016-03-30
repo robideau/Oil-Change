@@ -3,7 +3,7 @@
  * 
  * This script tracks game data and handles server updates - timers, ghost data, etc.
  *
- * Last update - 3/27/2016
+ * Last update - 3/30/2016
  */
 
 //Warnings to ignore - DEV ONLY, REMOVE FOR FINAL BUILDS
@@ -83,6 +83,7 @@ public class GameTracker : MonoBehaviour {
 
 	//Trigger countdown - start timer once countdown is completed
 	public IEnumerator countdown() {
+		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
 		timerText.text = "3...";
 		yield return new WaitForSeconds (1);
 		timerText.text = "2...";
@@ -90,6 +91,7 @@ public class GameTracker : MonoBehaviour {
 		timerText.text = "1...";
 		yield return new WaitForSeconds (1);
 		startTimer ();
+		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
 	}
 
 	public void stopTimer() {

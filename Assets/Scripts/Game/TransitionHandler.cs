@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 3/28/2016
+ * Last update - 3/30/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +25,7 @@ public class TransitionHandler : MonoBehaviour {
 	//Build mode status indicators
 	public BuildTracker buildTracker;
 	public Text buildStatus;
+	public Text buildCountText;
 
 	//Race mode status indicators
 	public Text raceTimer;
@@ -113,6 +114,7 @@ public class TransitionHandler : MonoBehaviour {
 		buildStatus.gameObject.SetActive (false);
 		submissionStatus.gameObject.SetActive (false);
 		buildTracker.toggleBuildMenu (false);
+		buildCountText.gameObject.SetActive (false);
 
 		//Wait for connection
 		while (!playerConnected) {
@@ -124,6 +126,7 @@ public class TransitionHandler : MonoBehaviour {
 		buildStatus.gameObject.SetActive (true);
 		buildModeComponents.SetActive(true);
 		submissionStatus.gameObject.SetActive (true);
+		buildCountText.gameObject.SetActive (true);
 
 		//Transition, start timer
 		defaultBuildTimerText = buildTimer.text;
@@ -159,6 +162,7 @@ public class TransitionHandler : MonoBehaviour {
 		buildStatus.gameObject.SetActive (false);
 		buildModeComponents.SetActive(false);
 		submissionStatus.gameObject.SetActive (false);
+		buildCountText.gameObject.SetActive (false);
 
 		//Transition to race mode
 		buildModeActive = false;

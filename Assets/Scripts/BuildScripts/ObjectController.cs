@@ -39,6 +39,7 @@ public class ObjectController : MonoBehaviour {
 			prefabsDirectory = "BuildObjects/Final";
 		}
 
+		buildLimit = GameObject.Find ("SessionData").GetComponent<playableGame> ().getBuildLimit ();
 		updateBuildCounterText ();
 	}
 
@@ -47,15 +48,9 @@ public class ObjectController : MonoBehaviour {
 		// Place object
 		if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
-			if (buildCount < buildLimit) {
-				currentObject = null;
-				newPiecePlaced = true;
-				buildCount++;
-				updateBuildCounterText ();
-			} else {
-				Destroy (currentObject);
-				StartCoroutine (displayBuildLimitWarning ());
-			}
+			currentObject = null;
+			newPiecePlaced = true;
+			updateBuildCounterText ();
 			chat.enableInput ();
 		}
 
@@ -87,12 +82,19 @@ public class ObjectController : MonoBehaviour {
 
 	// Called by prefab buttons in buildScreen.
 	public void SetCurrentObject (GameObject button) {
-		chat.disableInput ();
-		string prefabName = button.transform.GetChild(0).GetComponent<Text>().text;
-		GameObject toInstantiate = (GameObject) Resources.Load(prefabsDirectory + "/" + prefabName, typeof(GameObject));
-		if(currentObject != null) // Delete currentObject if object has not been placed and button is clicked
-			Destroy(currentObject);
-		currentObject = (GameObject) Instantiate(toInstantiate, hitPoint, Quaternion.identity);
+		if (buildCount < buildLimit) {
+			buildCount++;
+			chat.disableInput ();
+			string prefabName = button.transform.GetChild (0).GetComponent<Text> ().text;
+			GameObject toInstantiate = (GameObject)Resources.Load (prefabsDirectory + "/" + prefabName, typeof(GameObject));
+			if (currentObject != null) {// Delete currentObject if object has not been placed and button is clicked
+				Destroy (currentObject);
+				buildCount--;
+			}
+			currentObject = (GameObject)Instantiate (toInstantiate, hitPoint, Quaternion.identity);
+		} else {
+			StartCoroutine (displayBuildLimitWarning ());
+		}
 	}
 
 	public bool isNewPiecesPlaced() {
