@@ -4,7 +4,7 @@
  * This script implements player chat in a way that can be utilized in both build and play mode.
  * Will leave as open-ended as possible for future use.
  *
- * Last update - 3/25/2016
+ * Last update - 3/30/2016
  */
 
 using UnityEngine;
@@ -102,6 +102,14 @@ public class ModularChat : MonoBehaviour {
 		chatMessage sentMessage = new chatMessage (DateTime.Now.ToShortTimeString(), senderID, message); 
 		messageLog.Add (sentMessage);
 		chatLogText.text += ("\n" + senderID + ": " + message);
+	}
+
+	public void disableInput() {
+		chatInput.gameObject.SetActive (false);
+	}
+
+	public void enableInput() {
+		chatInput.gameObject.SetActive (true);
 	}
 }
 

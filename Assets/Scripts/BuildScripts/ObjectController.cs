@@ -19,6 +19,7 @@ public class ObjectController : MonoBehaviour {
 	private int buildCount = 0;
 	public Text buildLimitWarning;
 	public Text buildLimitCounter;
+	public ModularChat chat;
 
 	private GameObject currentObject;
 	private bool buildMenuTestDir;
@@ -55,6 +56,7 @@ public class ObjectController : MonoBehaviour {
 				Destroy (currentObject);
 				StartCoroutine (displayBuildLimitWarning ());
 			}
+			chat.enableInput ();
 		}
 
 		// If currentObject exists
@@ -85,6 +87,7 @@ public class ObjectController : MonoBehaviour {
 
 	// Called by prefab buttons in buildScreen.
 	public void SetCurrentObject (GameObject button) {
+		chat.disableInput ();
 		string prefabName = button.transform.GetChild(0).GetComponent<Text>().text;
 		GameObject toInstantiate = (GameObject) Resources.Load(prefabsDirectory + "/" + prefabName, typeof(GameObject));
 		if(currentObject != null) // Delete currentObject if object has not been placed and button is clicked

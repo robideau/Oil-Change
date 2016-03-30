@@ -92,6 +92,12 @@ public class TransitionHandler : MonoBehaviour {
 				updateBuildTimer ();
 			}
 		}
+
+		if (chat.chatInput.isFocused) {
+			chat.enableInput ();
+		} else {
+			chat.disableInput ();
+		}
 			
 	}
 
