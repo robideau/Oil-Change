@@ -3,7 +3,7 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 3/24/2016
+ * Last update - 3/30/2016
  */
 
 using UnityEngine;
@@ -15,6 +15,10 @@ public class ObjectController : MonoBehaviour {
 
 	public float rayCastDist;
 	public int gridBlockSize;
+	public int buildLimit = 30;
+	private int buildCount = 0;
+	public Text buildLimitWarning;
+	public Text buildLimitCounter;
 
 	private GameObject currentObject;
 	private bool buildMenuTestDir;
@@ -24,6 +28,7 @@ public class ObjectController : MonoBehaviour {
 	private bool newPiecePlaced = false;
 
 	void Start () {
+		//buildLimit = GameObject.Find ("SessionData").GetComponent<playableGame> ().getBuildLimit();
 		currentObject = null;
 		buildMenuTestDir = gameObject.GetComponent<BuildMenu>().buildMenuFromTest; //Grab build prefabs directory
 
@@ -32,6 +37,8 @@ public class ObjectController : MonoBehaviour {
 		} else {
 			prefabsDirectory = "BuildObjects/Final";
 		}
+
+		updateBuildCounterText ();
 	}
 
 	// Update is called once per frame
@@ -39,8 +46,15 @@ public class ObjectController : MonoBehaviour {
 		// Place object
 		if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
-			currentObject = null;
-			newPiecePlaced = true;
+			if (buildCount < buildLimit) {
+				currentObject = null;
+				newPiecePlaced = true;
+				buildCount++;
+				updateBuildCounterText ();
+			} else {
+				Destroy (currentObject);
+				StartCoroutine (displayBuildLimitWarning ());
+			}
 		}
 
 		// If currentObject exists
@@ -86,4 +100,14 @@ public class ObjectController : MonoBehaviour {
 		newPiecePlaced = false;
 	}
 
+	//Flash build limit warning
+	public IEnumerator displayBuildLimitWarning() {
+		buildLimitWarning.gameObject.SetActive (true);
+		yield return new WaitForSeconds (3);
+		buildLimitWarning.gameObject.SetActive (false);
+	}
+
+	public void updateBuildCounterText() {
+		buildLimitCounter.text = "Pieces used: " + buildCount + "/" + buildLimit;
+	}
 }

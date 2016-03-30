@@ -186,13 +186,14 @@ public class PlayerCarController : MonoBehaviour {
 		}
 
 		//Temporary control - stop player car movement and replay ghost data
+		/*
 		if (!ghostRecorder.getIsReplaying()) {
 			if (Input.GetKeyDown (controlScheme.replayGhost)) {
 				movementEnabled = false;
 				ghostRecorder.setIsRecording (false);
 				ghostRecorder.replayGhost ();
 			}
-		}
+		}*/
 
 		//Camera control - switch between multiple perspectives
 		if (cameraControlEnabled && Input.GetKeyDown(controlScheme.cameraControl)) {
