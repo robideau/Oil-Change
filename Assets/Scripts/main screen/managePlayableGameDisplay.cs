@@ -239,10 +239,15 @@ public class managePlayableGameDisplay : MonoBehaviour {
                 games.Add(input);
             }
         }
+        else if (g_list.text.Equals(""))
+        {
+            warning.gameObject.SetActive(true);
+            warning.text = "no games available";
+        }
         else
         {
             warning.gameObject.SetActive(true);
-            warning.text = "database problem:\n" + g_list.text;
+            warning.text = "server problem:\n" + g_list.text;
         }
 
         gettingData = false;
