@@ -33,4 +33,9 @@ public class childHolder : MonoBehaviour {
         }
         children.Clear();
     }
+
+    public List<GameObject> getChildList()
+    {
+        return children;
+    }
 }

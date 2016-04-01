@@ -129,7 +129,7 @@ public class GatherGameInfo : MonoBehaviour {
             nextScene.SetActive(true);
             SceneManager.LoadScene("buildScreen");
         }
-        //session name alread exists indicate this in menu and do nothing else
+        //session name already exists indicate this in menu and do nothing else
         else if(g_submit.text.Equals("sessionexists"))
         {
             g.reset();
