@@ -28,11 +28,13 @@ public class QuitButton : MonoBehaviour {
 
 		//If host quits and nobody has connected yet
 		if (game.checkHost() && !handler.playerConnected) {
-		//Remove session from database here
+            //Remove session from database here
+            StartCoroutine(removeGame());
 		}
-
+        //change these names to bypass login screen on main menu screen
+        GameObject.Find("SessionData").name = "SessionStillPlaying";
+        GameObject.Find("Script manager").name = "managerDuplicated";
 		SceneManager.LoadScene("main screens");
-		//Bypass login screen somehow?
 	}
 
 	[RPC] void notifyOpponentOfQuit() {
@@ -40,4 +42,12 @@ public class QuitButton : MonoBehaviour {
 		opponentStatusText.color = Color.yellow;
 	}
 
+
+    private IEnumerator removeGame()
+    {
+        string url = "http://proj-309-38.cs.iastate.edu/php/joinmatch.php?" + "sessionName=" + game.getName();
+        WWW g_list = new WWW(url);
+        yield return g_list;
+
+    }
 }
