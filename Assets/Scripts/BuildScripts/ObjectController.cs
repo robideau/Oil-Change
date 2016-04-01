@@ -15,6 +15,7 @@ public class ObjectController : MonoBehaviour {
 
 	public float rayCastDist;
 	public int gridBlockSize;
+	public GameObject worldGrid;
 	public int buildLimit = 30;
 	private int buildCount = 0;
 	public Text buildLimitWarning;
@@ -63,11 +64,32 @@ public class ObjectController : MonoBehaviour {
 				if (hitTag == "BuildObject" || hitTag == "Finish" || hitTag == "Start") {
 					Destroy(hit.collider.gameObject);
 					buildCount--;
+					updateBuildCounterText ();
 				}
 			}
 		}
+		if(Input.GetKeyDown("page up"))
+		{
+			worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y + 5.0f, 0.0f);
+			Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
+														 Camera.main.transform.position.y + 5.0f, 
+														 Camera.main.transform.position.z);
+			// "Refresh" currentObject
+			currentObject.SetActive(false);
+			currentObject.SetActive(true);
+		}
+		if(Input.GetKeyDown("page down"))
+		{
+			worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y - 5.0f, 0.0f);
+			Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
+														 Camera.main.transform.position.y - 5.0f, 
+														 Camera.main.transform.position.z);
+			// "Refresh" currentObject
+			currentObject.SetActive(false);
+			currentObject.SetActive(true);
+		}
 
-		// If currentObject exists
+		// Move currentObject with mouse pointer
 		if(currentObject)
 		{
 			RaycastHit hit;
