@@ -3,7 +3,7 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 3/30/2016
+ * Last update - 3/31/2016
  */
 
 using UnityEngine;
@@ -53,29 +53,37 @@ public class ObjectController : MonoBehaviour {
 			updateBuildCounterText ();
 			chat.enableInput ();
 		}
+		if(Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
+		{
+			RaycastHit hit;
+			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+			{
+				if (hit.collider.gameObject.tag == "BuildObject") {
+					Destroy(hit.collider.gameObject);
+					buildCount--;
+				}
+			}
+		}
 
 		// If currentObject exists
 		if(currentObject)
 		{
 			RaycastHit hit;
-			if(Camera.current != null)
+			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
 			{
-				if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
-				{
-					if(!currentObject.activeSelf)
-						currentObject.SetActive(true);
-					if (hit.collider.gameObject.tag == "Grid") {
-						hitPoint = hit.point;
-						hitPoint.x = Mathf.Round(hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
-						hitPoint.z = Mathf.Round(hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
-						currentObject.transform.position = hitPoint; //Snap to grid
-					}
+				if(!currentObject.activeSelf)
+					currentObject.SetActive(true);
+				if (hit.collider.gameObject.tag == "Grid") {
+					hitPoint = hit.point;
+					hitPoint.x = Mathf.Round(hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
+					hitPoint.z = Mathf.Round(hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
+					currentObject.transform.position = hitPoint; //Snap to grid
 				}
-				else
-				{
-					if(currentObject.activeSelf)
-						currentObject.SetActive(false);
-				}
+			}
+			else
+			{
+				if(currentObject.activeSelf)
+					currentObject.SetActive(false);
 			}
 		}
 	}

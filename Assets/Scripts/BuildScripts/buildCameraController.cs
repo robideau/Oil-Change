@@ -19,8 +19,8 @@ public class buildCameraController : MonoBehaviour {
 	// Good for moving cameras
 	void LateUpdate()
 	{
-		//Right mouse button held down
-		if(Input.GetMouseButton(1))
+		//Middle mouse button held down
+		if(Input.GetMouseButton(2))
 		{
 			float mouseHorizontal = Input.GetAxis("Mouse X");
 			float mouseVertical = Input.GetAxis("Mouse Y");
