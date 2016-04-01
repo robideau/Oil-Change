@@ -58,7 +58,8 @@ public class ObjectController : MonoBehaviour {
 			RaycastHit hit;
 			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
 			{
-				if (hit.collider.gameObject.tag == "BuildObject") {
+				string hitTag = hit.collider.gameObject.tag;
+				if (hitTag == "BuildObject" || hitTag == "Finish" || hitTag == "Start") {
 					Destroy(hit.collider.gameObject);
 					buildCount--;
 				}
