@@ -53,7 +53,8 @@ public class ObjectController : MonoBehaviour {
 			updateBuildCounterText ();
 			chat.enableInput ();
 		}
-		if(Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
+		// Delete object
+		if((Input.GetMouseButtonDown(2) || Input.GetKey("delete")) && !EventSystem.current.IsPointerOverGameObject())
 		{
 			RaycastHit hit;
 			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
