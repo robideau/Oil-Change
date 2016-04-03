@@ -81,7 +81,7 @@ public class ObjectController : MonoBehaviour {
 				}
 			}
 			// Move grid up a level
-			if(Input.GetKeyDown("page up"))
+			if(Input.GetKeyDown("page up") || Input.GetKeyDown("u"))
 			{
 				worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y + 5.0f, 0.0f);
 				Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
@@ -92,7 +92,7 @@ public class ObjectController : MonoBehaviour {
 				currentObject.SetActive(true);
 			}
 			// Move grid down a level
-			if(Input.GetKeyDown("page down"))
+			if(Input.GetKeyDown("page down") || Input.GetKeyDown("j"))
 			{
 				worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y - 5.0f, 0.0f);
 				Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
