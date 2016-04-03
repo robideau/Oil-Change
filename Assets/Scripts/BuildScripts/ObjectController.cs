@@ -3,7 +3,7 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 3/31/2016
+ * Last update - 4/3/2016
  */
 
 using UnityEngine;
@@ -47,8 +47,17 @@ public class ObjectController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		// Check if we're in test mode
 		if(!tbscript.getTestMode())
 		{
+			// Rotate object
+			if(Input.GetKeyDown("r"))
+			{
+				if(currentObject)
+				{
+					currentObject.transform.Rotate(0, 90, 0);
+				}
+			}
 			// Place object
 			if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 			{
@@ -71,6 +80,7 @@ public class ObjectController : MonoBehaviour {
 					}
 				}
 			}
+			// Move grid up a level
 			if(Input.GetKeyDown("page up"))
 			{
 				worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y + 5.0f, 0.0f);
@@ -81,6 +91,7 @@ public class ObjectController : MonoBehaviour {
 				currentObject.SetActive(false);
 				currentObject.SetActive(true);
 			}
+			// Move grid down a level
 			if(Input.GetKeyDown("page down"))
 			{
 				worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y - 5.0f, 0.0f);
