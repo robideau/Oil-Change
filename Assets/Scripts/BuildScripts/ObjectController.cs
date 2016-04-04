@@ -3,7 +3,7 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 4/3/2016
+ * Last update - 4/4/2016
  */
 
 using UnityEngine;
@@ -78,6 +78,12 @@ public class ObjectController : MonoBehaviour {
 						buildCount--;
 						updateBuildCounterText ();
 					}
+					else if(hitTag == "ParentedBuildObject")
+					{
+						Destroy(hit.collider.gameObject.transform.parent.parent.gameObject);
+						buildCount--;
+						updateBuildCounterText ();
+					}
 				}
 			}
 			// Move grid up a level
@@ -98,9 +104,12 @@ public class ObjectController : MonoBehaviour {
 				Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
 															 Camera.main.transform.position.y - 5.0f, 
 															 Camera.main.transform.position.z);
-				// "Refresh" currentObject
-				currentObject.SetActive(false);
-				currentObject.SetActive(true);
+				if(currentObject)
+				{
+					// "Refresh" currentObject if it exists
+					currentObject.SetActive(false);
+					currentObject.SetActive(true);
+				}
 			}
 
 			// Move currentObject with mouse pointer
@@ -127,8 +136,11 @@ public class ObjectController : MonoBehaviour {
 		}
 		else
 		{
-			if(currentObject.activeSelf)
-				currentObject.SetActive(false);
+			if(currentObject)
+			{
+				if(currentObject.activeSelf)
+					currentObject.SetActive(false);
+			}
 		}
 	}
 
