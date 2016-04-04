@@ -26,6 +26,7 @@ public class TransitionHandler : MonoBehaviour {
 	public BuildTracker buildTracker;
 	public Text buildStatus;
 	public Text buildCountText;
+	public Button submitButton;
 
 	//Race mode status indicators
 	public Text raceTimer;
@@ -51,6 +52,7 @@ public class TransitionHandler : MonoBehaviour {
 	public ModularChat chat;
 	public Text buildTimer;
 	public Text submissionStatus;
+	public QuitButton quitButton;
 
 	//Build mode timer info
 	public float buildTimeLimit = 10;
@@ -92,7 +94,8 @@ public class TransitionHandler : MonoBehaviour {
 				buildTimer.text = "Time's up!";
 				buildTimerActive = false;
 				buildTimerComplete = true;
-				//Eject to main menu, display message stating that one or more playeers did not finish
+				submitButton.gameObject.SetActive (false);
+				//Eject to main menu, display message stating that one or more players did not finish
 			} else {
 				updateBuildTimer ();
 			}
@@ -202,6 +205,12 @@ public class TransitionHandler : MonoBehaviour {
 		//Determine scores and send to final screen
 
 		yield return null;
+	}
+
+	//To be executed if 1 or more players did not successfully submit before time up
+	private IEnumerator timeOut() {
+		yield return new WaitForSeconds (5);
+		quitButton.OnClick ();
 	}
 
 	private void updateBuildTimer() {
