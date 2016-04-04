@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 3/30/2016
+ * Last update - 4/03/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,6 +71,10 @@ public class TransitionHandler : MonoBehaviour {
 		netManager.gameName = gameData.getName ();
 		StartCoroutine(netManager.joinSpecifiedServer (gameData.getName (), gameData.checkHost ()));
 		nv = netManager.GetComponent<NetworkView>();
+
+		//Set player colors
+		int randomColor = Random.Range(0, 8);
+		gameTracker.playerCar.transform.FindChild ("DefaultCar").FindChild ("Frame").gameObject.GetComponent<MeshRenderer> ().material = gameTracker.playerCar.transform.FindChild ("DefaultCar").GetComponent<MeshRenderer> ().materials[randomColor];
 
 		//Transition to build mode, activate timer
 		StartCoroutine (buildMode ());

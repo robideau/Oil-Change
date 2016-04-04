@@ -265,9 +265,7 @@ public class PlayerCarController : MonoBehaviour {
 		WheelFrictionCurve defaultForwardFric = leftCollider.forwardFriction;
 		WheelFrictionCurve defaultSideFric = leftCollider.sidewaysFriction;
 		if (Physics.Raycast (ray, out hit, carBodyHeight + .1f)) {
-			print ("hit");
 			if (hit.collider.gameObject.name.StartsWith("IceSquare")) {
-				print ("here");
 				defaultForwardFric.stiffness = .75f;
 				defaultSideFric.stiffness = 1;
 				leftCollider.forwardFriction = defaultForwardFric;
