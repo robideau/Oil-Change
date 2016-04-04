@@ -15,6 +15,11 @@ public class TransitionHandler : MonoBehaviour {
 	//Empties - hold objects exclusive to either build or race mode for easy deactivation
 	public GameObject buildModeComponents;
 	public GameObject raceModeComponents;
+	public GameObject skyboxPool;
+	public GameObject worldEnd;
+
+	//Cameras
+	public Camera mainBuildCamera, mainRaceCamera, sideRaceCamera, frontRaceCamera;
 
 	//Network manager and data to handle initial connection
 	public NetManager netManager;
@@ -77,6 +82,18 @@ public class TransitionHandler : MonoBehaviour {
 		//Set player colors
 		int randomColor = Random.Range(0, 8);
 		gameTracker.playerCar.transform.FindChild ("DefaultCar").FindChild ("Frame").gameObject.GetComponent<MeshRenderer> ().material = gameTracker.playerCar.transform.FindChild ("DefaultCar").GetComponent<MeshRenderer> ().materials[randomColor];
+
+		//Set skybox
+		int randomSky = Random.Range(0, 4);
+		RenderSettings.skybox = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		print ("Random: " + randomSky);
+		print (skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky].name);
+			
+		mainBuildCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		mainRaceCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		sideRaceCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		frontRaceCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		worldEnd.GetComponent<MeshRenderer> ().material = worldEnd.transform.FindChild ("MaterialPool").GetComponent<MeshRenderer> ().materials [randomSky];
 
 		//Transition to build mode, activate timer
 		StartCoroutine (buildMode ());
