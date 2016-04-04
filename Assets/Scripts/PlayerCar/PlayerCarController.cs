@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 3/30/2016
+ * Last update - 4/3/2016
  */
 
 using UnityEngine;
@@ -208,6 +208,8 @@ public class PlayerCarController : MonoBehaviour {
 			}
 		}
 
+		checkIce ();
+
 	}
 
 	public float getMotorTorque() {
@@ -255,6 +257,32 @@ public class PlayerCarController : MonoBehaviour {
 			transform.rotation = GameObject.FindGameObjectWithTag ("Start").transform.rotation;
 		}
 		hasFinished = false;
+	}
+
+	public void checkIce() {
+		RaycastHit hit;
+		Ray ray = new Ray (transform.position + new Vector3(0, 0, carBodyHeight + .1f), -Vector3.up);
+		WheelFrictionCurve defaultForwardFric = leftCollider.forwardFriction;
+		WheelFrictionCurve defaultSideFric = leftCollider.sidewaysFriction;
+		if (Physics.Raycast (ray, out hit, carBodyHeight + .1f)) {
+			print ("hit");
+			if (hit.collider.gameObject.name.StartsWith("IceSquare")) {
+				print ("here");
+				defaultForwardFric.stiffness = .75f;
+				defaultSideFric.stiffness = 1;
+				leftCollider.forwardFriction = defaultForwardFric;
+				leftCollider.sidewaysFriction = defaultSideFric;
+				rightCollider.forwardFriction = defaultForwardFric;
+				rightCollider.sidewaysFriction = defaultSideFric;
+			} else {
+				defaultForwardFric.stiffness = 3;
+				defaultSideFric.stiffness = 4;
+				leftCollider.forwardFriction = defaultForwardFric;
+				leftCollider.sidewaysFriction = defaultSideFric;
+				rightCollider.forwardFriction = defaultForwardFric;
+				rightCollider.sidewaysFriction = defaultSideFric;
+			}
+		}	
 	}
 }
 
