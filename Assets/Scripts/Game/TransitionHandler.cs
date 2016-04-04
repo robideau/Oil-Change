@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 4/03/2016
+ * Last update - 4/04/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,11 +91,29 @@ public class TransitionHandler : MonoBehaviour {
 				startTime = Time.time;
 			}
 			if (buildTimer.text == "Remaining: 00:00") {
-				buildTimer.text = "Time's up!";
-				buildTimerActive = false;
-				buildTimerComplete = true;
-				submitButton.gameObject.SetActive (false);
-				StartCoroutine(timeOut());
+				if(submissionStatus.text == "Submitting...")
+				{
+					buildTimer.text = "Checking submission...";
+					buildTimerActive = false;
+					submitButton.gameObject.SetActive (false);
+
+					while(submissionStatus.text == "Submitting...")
+						StartCoroutine(submissionWait());
+
+					buildTimer.text = "Time's up!";
+					buildTimerComplete = true;
+
+					if(submissionStatus.text != "Submission accepted!")
+						StartCoroutine(timeOut());
+				}
+				else
+				{
+					buildTimer.text = "Time's up!";
+					buildTimerActive = false;
+					buildTimerComplete = true;
+					submitButton.gameObject.SetActive (false);
+					StartCoroutine(timeOut());
+				}
 			} else {
 				updateBuildTimer ();
 			}
@@ -211,6 +229,10 @@ public class TransitionHandler : MonoBehaviour {
 	private IEnumerator timeOut() {
 		yield return new WaitForSeconds (5);
 		quitButton.OnClick ();
+	}
+
+	private IEnumerator submissionWait() {
+		yield return new WaitForSeconds (3);
 	}
 
 	private void updateBuildTimer() {
