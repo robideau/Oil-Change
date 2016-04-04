@@ -154,6 +154,10 @@ public class TransitionHandler : MonoBehaviour {
 			Destroy(GameObject.FindGameObjectWithTag("BuildObject"));
 			yield return null;
 		}
+		while (GameObject.FindGameObjectWithTag ("ParentedBuildObject") != null) {
+			Destroy(GameObject.FindGameObjectWithTag("ParentedBuildObject"));
+			yield return null;
+		}
 		while (GameObject.FindGameObjectWithTag ("Finish") != null) {
 			Destroy(GameObject.FindGameObjectWithTag("Finish"));
 			yield return null;

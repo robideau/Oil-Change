@@ -135,6 +135,9 @@ public class TrackScanner : MonoBehaviour {
 			scannedLevelData += "(" + other.transform.parent.parent.lossyScale.x + ", " + other.transform.parent.parent.lossyScale.y + ", " + other.transform.parent.parent.lossyScale.z + ")" + "\n";
 			scannedLevelData += other.transform.parent.parent.rotation + "\n";
 			if (deleteOnScan) {
+				print ("here");
+				Destroy (other.gameObject);
+				Destroy (other.gameObject.transform.parent.gameObject);
 				Destroy (other.gameObject.transform.parent.parent.gameObject);
 			}
 		}
