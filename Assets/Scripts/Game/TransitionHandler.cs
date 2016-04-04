@@ -95,7 +95,7 @@ public class TransitionHandler : MonoBehaviour {
 				buildTimerActive = false;
 				buildTimerComplete = true;
 				submitButton.gameObject.SetActive (false);
-				//Eject to main menu, display message stating that one or more players did not finish
+				StartCoroutine(timeOut());
 			} else {
 				updateBuildTimer ();
 			}
