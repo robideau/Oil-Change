@@ -131,9 +131,9 @@ public class TrackScanner : MonoBehaviour {
 		GameObject[] detectedParentedObjects = GameObject.FindGameObjectsWithTag ("ParentedBuildObject");
 		foreach (GameObject other in detectedParentedObjects) {
 			scannedLevelData += other.gameObject.name + "\n";
-			scannedLevelData += other.transform.position + "\n";
-			scannedLevelData += "(" + other.transform.lossyScale.x + ", " + other.transform.lossyScale.y + ", " + other.transform.lossyScale.z + ")" + "\n";
-			scannedLevelData += other.transform.rotation + "\n";
+			scannedLevelData += other.transform.parent.parent.position + "\n";
+			scannedLevelData += "(" + other.transform.parent.parent.lossyScale.x + ", " + other.transform.parent.parent.lossyScale.y + ", " + other.transform.parent.parent.lossyScale.z + ")" + "\n";
+			scannedLevelData += other.transform.parent.parent.rotation + "\n";
 			if (deleteOnScan) {
 				Destroy (other.gameObject.transform.parent.parent.gameObject);
 			}
