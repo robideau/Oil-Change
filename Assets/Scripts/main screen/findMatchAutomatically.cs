@@ -31,51 +31,46 @@ public class findMatchAutomatically : MonoBehaviour {
     private IEnumerator getMatch()
     {
         //wait for 1 second to load in most updated current games list
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         //obtain reference to available games list
         List<GameObject> joinableList = gameAvailable.getChildList();
         //try to join each game until successful join (avoid games with passwords)
-        foreach (GameObject game in joinableList)
+        for (int i = 0; i < gameAvailable.getCount(); i++)
         {
-            if (game.GetComponent<InputField>() != null)
+
+            //password needed skip
+            if (gameAvailable.checkChildField(i))
             {
-                //password needed skip
-                if (game.GetComponent<InputField>().interactable)
-                {
-                    Debug.Log("password found");
-                    continue;
-                }
-                else
-                {
-                    playableGame prefabGame = game.GetComponent<playableGame>();
-                    //start double check
-                    StartCoroutine(doubleCheckGame(prefabGame));
-                    //wait for doublecheck to finish and join session if available
-                    StartCoroutine(SessionTransfer(sessionData, prefabGame));
-
-                    //wait for session transfer to complete
-                    while (tryingToJoin)
-                    {
-                        yield return new WaitForSeconds(0.1f);
-                    }
-
-                    //if game Session found return since player is joining a match
-                    if (matchFound)
-                    {
-                        break;
-                    }
-                }
+                Debug.Log("password found");
+                continue;
             }
             else
             {
-                Debug.Log("null field");
+                playableGame prefabGame = gameAvailable.getChild(i).GetComponent<playableGame>();
+                //start double check
+                StartCoroutine(doubleCheckGame(prefabGame));
+                //wait for doublecheck to finish and join session if available
+                StartCoroutine(SessionTransfer(sessionData, prefabGame));
+
+                //wait for session transfer to complete
+                while (tryingToJoin)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                }
+
+                //if game Session found return since player is joining a match
+                if (matchFound)
+                {
+                    break;
+                }
             }
         }
+        
 
         if (!matchFound)
         {
-            //if no game was found create a new game with default settings
-            StartCoroutine(add_Default());
+                //if no game was found create a new game with default settings
+                StartCoroutine(add_Default());
         }
     }
 
