@@ -3,8 +3,11 @@
  * 
  * This script tracks game data and handles server updates - timers, ghost data, etc.
  *
- * Last update - 3/3/2016
+ * Last update - 3/30/2016
  */
+
+//Warnings to ignore - DEV ONLY, REMOVE FOR FINAL BUILDS
+#pragma warning disable 0618 //deprecated network view
 
 using UnityEngine;
 using System.Collections;
@@ -37,6 +40,7 @@ public class GameTracker : MonoBehaviour {
 		opponentIsWaiting = false;
 		waitingForOpponent = false;
 		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
+		timerText.gameObject.SetActive (true);
 		StartCoroutine (countdown());
 	}
 
@@ -45,8 +49,7 @@ public class GameTracker : MonoBehaviour {
 		if (isPlaying) {
 			updateTimer ();
 		}
-
-		//Debug only - replace with "finish" event later
+			
 		if (playerCar.GetComponent<PlayerCarController>().hasFinished && isPlaying) {
 			stopTimer ();
 			//For debug purposes - replace with player names later
@@ -78,13 +81,9 @@ public class GameTracker : MonoBehaviour {
 		finalTime = timerTime;
 	}
 
-	//Set player car to designated starting position
-	public void setStartingPosition() {
-		//TODO
-	}
-
 	//Trigger countdown - start timer once countdown is completed
 	public IEnumerator countdown() {
+		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
 		timerText.text = "3...";
 		yield return new WaitForSeconds (1);
 		timerText.text = "2...";
@@ -92,6 +91,7 @@ public class GameTracker : MonoBehaviour {
 		timerText.text = "1...";
 		yield return new WaitForSeconds (1);
 		startTimer ();
+		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
 	}
 
 	public void stopTimer() {

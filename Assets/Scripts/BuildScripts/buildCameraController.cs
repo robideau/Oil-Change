@@ -7,6 +7,7 @@ public class buildCameraController : MonoBehaviour {
 	public float shiftSpeed;
 	public float vRotate;
 	public float hRotate;
+	public ModularChat chat;
 
 	// Use this for initialization
 	void Start()
@@ -29,12 +30,15 @@ public class buildCameraController : MonoBehaviour {
 			// Horizontal Rotate relative to world
 			transform.Rotate(0.0f, mouseHorizontal*hRotate, 0.0f, Space.World);
 		}
-		float moveHorizontal = Input.GetAxis ("Horizontal");
-		float moveVertical = Input.GetAxis ("Vertical");
 
-		if(Input.GetKey("left shift"))
-			transform.Translate(moveHorizontal*(speed+shiftSpeed)*0.2f , 0.0f, moveVertical*(speed+shiftSpeed)*0.2f);
-		else
-			transform.Translate(moveHorizontal*speed*0.2f , 0.0f, moveVertical*speed*0.2f);
+		if (!chat.chatInput.isFocused) {
+			float moveHorizontal = Input.GetAxis ("Horizontal");
+			float moveVertical = Input.GetAxis ("Vertical");
+				
+			if (Input.GetKey ("left shift"))
+				transform.Translate (moveHorizontal * (speed + shiftSpeed) * 0.2f, 0.0f, moveVertical * (speed + shiftSpeed) * 0.2f);
+			else
+				transform.Translate (moveHorizontal * speed * 0.2f, 0.0f, moveVertical * speed * 0.2f);
+		}
 	}
 }

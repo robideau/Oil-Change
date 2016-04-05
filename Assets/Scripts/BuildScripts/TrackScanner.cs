@@ -9,13 +9,15 @@
  * 				3: scale
  * 				4: rotation
  *
- * Last update - 3/21/2016
+ * Last update - 4/4/2016
  */
 
 using UnityEngine;
 using System.Collections;
 
 public class TrackScanner : MonoBehaviour {
+
+	public SendData dataSender;
 
 	//Output filename
 	public string outputFile;
@@ -39,6 +41,7 @@ public class TrackScanner : MonoBehaviour {
 
 	//Whether or not trackscanner is currently scanning
 	private bool scanning = false;
+	public bool deleteOnScan;
 
 	//Scan delay - small delay to be inserted after each scan iteration to allow collisions to register
 	public float scanDelay;
@@ -48,6 +51,7 @@ public class TrackScanner : MonoBehaviour {
 	private char delimiter = '\n';
 
 	void Start () {
+		deleteOnScan = false;
 		gridCollider = worldGrid.GetComponent<BoxCollider> ();
 		gridBlockSize = objectController.gridBlockSize;
 		//Set TrackScanner position to lowest X and Z position corner of world grid at base Y value
@@ -70,7 +74,7 @@ public class TrackScanner : MonoBehaviour {
 	 */
 	public IEnumerator ProcessTrack() {
 		scanning = true; //begin scanning - record trigger collisions
-
+		GetComponent<BoxCollider>().enabled = true;
 		//Iterate through all grid spaces
 		for (int i = 0; i < gridYSpaces; i++) {
 			transform.position = new Vector3(transform.position.x, transform.position.y, startZ);
@@ -88,13 +92,16 @@ public class TrackScanner : MonoBehaviour {
 		}
 			
 		scanning = false;
+		GetComponent<BoxCollider> ().enabled = false;
 		print ("Scan complete.");
 		yield return null;
 	}
 
 	//A (much) quicker version of ProcessTrack() - to be used as default unless we start running into issues.
-	public IEnumerator QuickProcessTrack() {
+	/*public IEnumerator QuickProcessTrack() {
+		scannedLevelData = "";
 		scanning = true;
+		GetComponent<BoxCollider>().enabled = true;
 		GetComponent<BoxCollider> ().size = new Vector3 (gridXSpaces * gridBlockSize, 1, gridZSpaces * gridBlockSize);
 		transform.position = new Vector3 (0, baseY - 1, 0);
 		while (transform.position.y < yIncrements * gridYSpaces) {
@@ -102,9 +109,58 @@ public class TrackScanner : MonoBehaviour {
 			yield return new WaitForSeconds (scanDelay);
 		}
 		scanning = false;
+		GetComponent<BoxCollider> ().enabled = false;
 		print ("Quick scan complete.");
 		yield return null;
+	}*/
+
+	//Early implementation of a more stable process track method - ran into issues with original algorithm
+	public IEnumerator QuickProcessTrack() {
+		scannedLevelData = "";
+		scanning = true;
+		GameObject[] detectedObjects = GameObject.FindGameObjectsWithTag ("BuildObject");
+		foreach (GameObject other in detectedObjects) {
+			scannedLevelData += other.gameObject.name + "\n";
+			scannedLevelData += other.transform.position + "\n";
+			scannedLevelData += "(" + other.transform.lossyScale.x + ", " + other.transform.lossyScale.y + ", " + other.transform.lossyScale.z + ")" + "\n";
+			scannedLevelData += other.transform.rotation + "\n";
+			if (deleteOnScan) {
+				Destroy (other.gameObject);
+			}
+		}
+		GameObject[] detectedParentedObjects = GameObject.FindGameObjectsWithTag ("ParentedBuildObject");
+		foreach (GameObject other in detectedParentedObjects) {
+			scannedLevelData += other.gameObject.name + "\n";
+			scannedLevelData += other.transform.parent.parent.position + "\n";
+			scannedLevelData += "(" + other.transform.parent.parent.lossyScale.x + ", " + other.transform.parent.parent.lossyScale.y + ", " + other.transform.parent.parent.lossyScale.z + ")" + "\n";
+			scannedLevelData += other.transform.parent.parent.rotation + "\n";
+			if (deleteOnScan) {
+				print ("here");
+				Destroy (other.gameObject);
+				Destroy (other.gameObject.transform.parent.gameObject);
+				Destroy (other.gameObject.transform.parent.parent.gameObject);
+			}
+		}
+		GameObject start = GameObject.FindGameObjectWithTag ("Start");
+		scannedLevelData += start.gameObject.name + "\n";
+		scannedLevelData += start.transform.position + "\n";
+		scannedLevelData += "(" + start.transform.lossyScale.x + ", " + start.transform.lossyScale.y + ", " + start.transform.lossyScale.z + ")" + "\n";
+		scannedLevelData += start.transform.rotation + "\n";
+		if (deleteOnScan) {
+			Destroy (start.gameObject);
+		}
+		GameObject finish = GameObject.FindGameObjectWithTag ("Finish");
+		scannedLevelData += finish.gameObject.name + "\n";
+		scannedLevelData += finish.transform.position + "\n";
+		scannedLevelData += "(" + finish.transform.lossyScale.x + ", " + finish.transform.lossyScale.y + ", " + finish.transform.lossyScale.z + ")" + "\n";
+		scannedLevelData += finish.transform.rotation + "\n";
+		if (deleteOnScan) {
+			Destroy (finish.gameObject);
+		}
+		yield return null;
 	}
+
+
 
 	void OnTriggerEnter(Collider other) {
 		//If other object is a placed track piece
@@ -114,6 +170,9 @@ public class TrackScanner : MonoBehaviour {
 				scannedLevelData += other.transform.position + "\n";
 				scannedLevelData += "(" + other.transform.lossyScale.x + ", " + other.transform.lossyScale.y + ", " + other.transform.lossyScale.z + ")" + "\n";
 				scannedLevelData += other.transform.rotation + "\n";
+				if (deleteOnScan) {
+					Destroy (other.gameObject);
+				}
 			}
 		}
 	}
@@ -121,17 +180,18 @@ public class TrackScanner : MonoBehaviour {
 	//Clean object names in scanned level data
 	//Use this function to remove (#) tags on the end of prefab instances
 	//Trims strings at first space - VERY IMPORTANT: DO NOT USE SPACES IN PREFAB NAMES
-	private void cleanObjectNames() {
+	public void cleanObjectNames() {
 		string[] stringLines = scannedLevelData.Split (delimiter);
 		scannedLevelData = "";
-		for (int i = 0; i < stringLines.Length; i++) {
+		for (int i = 0; i < stringLines.Length-1; i++) {
 			if (i % 4 == 0) {
-				string[] tokens = stringLines [i].Split (' ');
-				scannedLevelData += (tokens [0] + "\n");
+				string[] tokens = stringLines [i].Split ('(');
+				scannedLevelData += (tokens [0].Trim() + "\n");
 			} else {
 				scannedLevelData += (stringLines [i] + "\n");
 			}
 		}
+		transform.position = new Vector3 (startX, baseY, startZ);
 	}
 
 	public bool IsScanning() {
@@ -144,6 +204,26 @@ public class TrackScanner : MonoBehaviour {
 
 	public string getScannedLevelData() {
 		return scannedLevelData;
+	}
+
+	//Determine whether or not mandatory pieces have been placed (start and finish)
+	public bool requiredPiecesPlaced() {
+		string[] tokens = scannedLevelData.Split ('\n');
+		bool finishPlaced = false;
+		bool startPlaced = false;
+		for (int i = 0; i < tokens.Length; i++) {
+			if (tokens [i].StartsWith ("Finish")) {
+				finishPlaced = true;
+			}
+			if (tokens [i].StartsWith ("Start")) {
+				startPlaced = true;
+			}
+		}
+		if (finishPlaced && startPlaced) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 		
 }

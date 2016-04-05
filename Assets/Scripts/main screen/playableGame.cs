@@ -2,8 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/**
+*create by Ryan Young
+    last updated 3/24/16
+*/
 public class playableGame : MonoBehaviour {
-    /**
+	void Awake()
+	{
+		DontDestroyOnLoad(this.gameObject);
+	}
+
+	/**
     *
     *name for this playable game
     *
@@ -44,6 +53,16 @@ public class playableGame : MonoBehaviour {
     */
     private int keySize = 10;
 
+    /**
+    password for this game session
+    */
+    private string password;
+
+    /**
+    *verifiy if the game session held is the hosts such that a joinable connection is set up
+    */
+    private bool isHost = false;
+
     //need to add array of game mods?
     //should password go here?
 
@@ -68,12 +87,13 @@ public class playableGame : MonoBehaviour {
     *host = player name who made this match
     *
     */
-    public playableGame(string gameName, int buildTime, int buildLimit, string host)
+    public playableGame(string gameName, int buildTime, int buildLimit, string host, string password)
     {
         this.gameName = gameName;
         this.buildTime = buildTime;
         this.buildLimit = buildLimit;
         this.host = host;
+        this.password = password;
     }
 
     /**
@@ -119,6 +139,22 @@ public class playableGame : MonoBehaviour {
         {
             keywords[i] = keys[i];
         }
+    }
+
+    /**
+    *set the password for this game session
+    */
+    public void setPass(string pass)
+    {
+        password = pass;
+    }
+
+    /**
+    *sets whether this session is a host session
+    */
+    public void establishHost(bool isHost)
+    {
+        this.isHost = isHost;
     }
 
     /**
@@ -169,6 +205,35 @@ public class playableGame : MonoBehaviour {
     public int getBuildTime()
     {
         return buildTime;
+    }
+
+    /**
+    *get the password for this game session
+    */
+    public string getPass()
+    {
+        return password;
+    }
+
+    /**
+    *returns true if session is for a host false otherwise
+    */
+    public bool checkHost()
+    {
+        return isHost;
+    }
+
+    /**
+    *reset the information for playable game
+    */
+    public void reset()
+    {
+        gameName = null;
+        buildTime = 120;
+        buildLimit = 30;
+        host = null;
+        keywords = null;
+        password = null;
     }
 
     /**

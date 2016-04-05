@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 /**
-*create by Ryan Young March 2
+*create by Ryan Young
+    last updated 3/22/16
 */
 public class accountInfo : MonoBehaviour {
 
     private string userName;
     private List<string> friends;
     private int friendsCount;
-    private string email;
     private stats playerRecord;
 
     public accountInfo()
@@ -23,21 +23,19 @@ public class accountInfo : MonoBehaviour {
 
     /**
     *checks data base for existing player name and loads in player information
+    *!!!this method should only be called when a confirmed player account is found!!!
+    *
     */
 	public void loadAccount(string existingPlayer)
     {
-        //to do check for player existence
+        //          todo
         //load in player friends list
         //load in player IP?
-        //load in player email if account name given
-        //load in player account name if email given
-        //have stats loaded in aswell
+        //have stats loaded in
 
-        //for now I will just store the player name as existing player and initialize friends list as empty
-        //and set email to default
-        userName = "player";
+        //set player name to previously found player name
+        userName = existingPlayer;
         friends = new List<string>();
-        email = "@nothing";
         friendsCount = 0;
 
         //at this point the player is know to exist and stats will access database to get player stats
@@ -48,34 +46,24 @@ public class accountInfo : MonoBehaviour {
     * a new player account is made so send to data base the player name and password
     * initialize other player info to default new player
     */
-    public void newAccount(string newPlayerName,string newPlayerEmail, string password)
+    public void newAccount(string newPlayerName, string password)
     {
         //set username email initialize empty friends list and new stats with 0 stats so far
         userName = newPlayerName;
-        email = newPlayerEmail;
         friends = new List<string>();
         playerRecord = new stats();
         friendsCount = 0;
 
-        //all the new information will need to be sent to data base via forwardData()
     }
 
     /**
     *will update player information in the data base or create new player information if needed
     */
-    public void forwardData()
+    IEnumerator forwardData()
     {
-        //need to forward current data from database (includes all statistic information)
+        //need to forward current data to database (includes all statistic information)
+        yield return new WaitForSeconds(0.1f);
 
-
-    }
-
-    /**
-    *helper method for gather player data
-    */
-    private void fetchData()
-    {
-        //needs to fetch data from database
     }
 
     /**
@@ -86,13 +74,6 @@ public class accountInfo : MonoBehaviour {
         return userName;
     }
 
-    /**
-    *returns account email
-    */
-    public string getEmail()
-    {
-        return email;
-    }
 
     public string[] getFriends()
     {
@@ -120,8 +101,4 @@ public class accountInfo : MonoBehaviour {
         return playerRecord;
     }
 
-    public void setEmail(string newEmail)
-    {
-        email = newEmail;
-    }
 }

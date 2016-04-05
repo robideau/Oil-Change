@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 3/1/2016
+ * Last update - 4/3/2016
  */
 
 using UnityEngine;
@@ -80,7 +80,16 @@ public class PlayerCarController : MonoBehaviour {
 		carBodyHeight = carBody.GetComponent<Collider> ().bounds.extents.y;
 
 		movementEnabled = true;
-			
+
+	}
+
+	void OnEnable() {
+		//Locate start position
+		if (GameObject.FindGameObjectWithTag ("Start") != null) {
+			transform.position = GameObject.FindGameObjectWithTag ("Start").transform.position;
+			transform.rotation = GameObject.FindGameObjectWithTag ("Start").transform.rotation;
+		}
+		hasFinished = false;
 	}
 
 	void Update () {
@@ -177,13 +186,14 @@ public class PlayerCarController : MonoBehaviour {
 		}
 
 		//Temporary control - stop player car movement and replay ghost data
+		/*
 		if (!ghostRecorder.getIsReplaying()) {
 			if (Input.GetKeyDown (controlScheme.replayGhost)) {
 				movementEnabled = false;
 				ghostRecorder.setIsRecording (false);
 				ghostRecorder.replayGhost ();
 			}
-		}
+		}*/
 
 		//Camera control - switch between multiple perspectives
 		if (cameraControlEnabled && Input.GetKeyDown(controlScheme.cameraControl)) {
@@ -197,6 +207,8 @@ public class PlayerCarController : MonoBehaviour {
 				cameraRig.transform.GetChild (activeCamera).gameObject.SetActive (true); //turn on default cam
 			}
 		}
+
+		checkIce ();
 
 	}
 
@@ -217,7 +229,11 @@ public class PlayerCarController : MonoBehaviour {
 	}
 
 	public void fullReset() {
-		carBase.transform.position = ghostRecorder.getFramePosition (0);
+		if (GameObject.FindGameObjectWithTag ("Start") != null) {
+			carBase.transform.position = GameObject.FindGameObjectWithTag ("Start").transform.position;
+		} else {
+			carBase.transform.position = ghostRecorder.getFramePosition (0);
+		}
 		carBase.transform.rotation = ghostRecorder.getFrameRotation (0);
 		carBase.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
 		carBase.GetComponent<Rigidbody> ().angularVelocity = new Vector3 (0, 0, 0);
@@ -233,6 +249,38 @@ public class PlayerCarController : MonoBehaviour {
 		
 	public bool isNotAirborne() {
 		return Physics.Raycast (transform.position, -Vector3.up, carBodyHeight + .1f);
+	}
+
+	public void relocateToStart() {
+		if (GameObject.FindGameObjectWithTag ("Start") != null) {
+			transform.position = GameObject.FindGameObjectWithTag ("Start").transform.position;
+			transform.rotation = GameObject.FindGameObjectWithTag ("Start").transform.rotation;
+		}
+		hasFinished = false;
+	}
+
+	public void checkIce() {
+		RaycastHit hit;
+		Ray ray = new Ray (transform.position + new Vector3(0, 0, carBodyHeight + .1f), -Vector3.up);
+		WheelFrictionCurve defaultForwardFric = leftCollider.forwardFriction;
+		WheelFrictionCurve defaultSideFric = leftCollider.sidewaysFriction;
+		if (Physics.Raycast (ray, out hit, carBodyHeight + .1f)) {
+			if (hit.collider.gameObject.name.StartsWith("IceSquare")) {
+				defaultForwardFric.stiffness = .75f;
+				defaultSideFric.stiffness = 1;
+				leftCollider.forwardFriction = defaultForwardFric;
+				leftCollider.sidewaysFriction = defaultSideFric;
+				rightCollider.forwardFriction = defaultForwardFric;
+				rightCollider.sidewaysFriction = defaultSideFric;
+			} else {
+				defaultForwardFric.stiffness = 3;
+				defaultSideFric.stiffness = 4;
+				leftCollider.forwardFriction = defaultForwardFric;
+				leftCollider.sidewaysFriction = defaultSideFric;
+				rightCollider.forwardFriction = defaultForwardFric;
+				rightCollider.sidewaysFriction = defaultSideFric;
+			}
+		}	
 	}
 }
 

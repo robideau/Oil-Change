@@ -12,7 +12,6 @@ public class clearWarningAfterTime : MonoBehaviour {
 
     private float frame;
     public Text pError;
-    public Text eError;
 
 	// Use this for initialization
 	void Start () {
@@ -24,7 +23,6 @@ public class clearWarningAfterTime : MonoBehaviour {
 	    if(Time.time > frame + 10)
         {
             pError.text = "";
-            eError.text = "";
             frame = Time.time;
         }
 
