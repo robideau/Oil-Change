@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 3/30/2016
+ * Last update - 4/04/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +15,11 @@ public class TransitionHandler : MonoBehaviour {
 	//Empties - hold objects exclusive to either build or race mode for easy deactivation
 	public GameObject buildModeComponents;
 	public GameObject raceModeComponents;
+	public GameObject skyboxPool;
+	public GameObject worldEnd;
+
+	//Cameras
+	public Camera mainBuildCamera, mainRaceCamera, sideRaceCamera, frontRaceCamera;
 
 	//Network manager and data to handle initial connection
 	public NetManager netManager;
@@ -26,6 +31,7 @@ public class TransitionHandler : MonoBehaviour {
 	public BuildTracker buildTracker;
 	public Text buildStatus;
 	public Text buildCountText;
+	public Button submitButton;
 
 	//Race mode status indicators
 	public Text raceTimer;
@@ -51,6 +57,7 @@ public class TransitionHandler : MonoBehaviour {
 	public ModularChat chat;
 	public Text buildTimer;
 	public Text submissionStatus;
+	public QuitButton quitButton;
 
 	//Build mode timer info
 	public float buildTimeLimit = 10;
@@ -72,6 +79,22 @@ public class TransitionHandler : MonoBehaviour {
 		StartCoroutine(netManager.joinSpecifiedServer (gameData.getName (), gameData.checkHost ()));
 		nv = netManager.GetComponent<NetworkView>();
 
+		//Set player colors
+		int randomColor = Random.Range(0, 8);
+		gameTracker.playerCar.transform.FindChild ("DefaultCar").FindChild ("Frame").gameObject.GetComponent<MeshRenderer> ().material = gameTracker.playerCar.transform.FindChild ("DefaultCar").GetComponent<MeshRenderer> ().materials[randomColor];
+
+		//Set skybox
+		int randomSky = Random.Range(0, 4);
+		RenderSettings.skybox = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		print ("Random: " + randomSky);
+		print (skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky].name);
+			
+		mainBuildCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		mainRaceCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		sideRaceCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		frontRaceCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
+		worldEnd.GetComponent<MeshRenderer> ().material = worldEnd.transform.FindChild ("MaterialPool").GetComponent<MeshRenderer> ().materials [randomSky];
+
 		//Transition to build mode, activate timer
 		StartCoroutine (buildMode ());
 
@@ -85,10 +108,29 @@ public class TransitionHandler : MonoBehaviour {
 				startTime = Time.time;
 			}
 			if (buildTimer.text == "Remaining: 00:00") {
-				buildTimer.text = "Time's up!";
-				buildTimerActive = false;
-				buildTimerComplete = true;
-				//Eject to main menu, display message stating that one or more playeers did not finish
+				if(submissionStatus.text == "Submitting...")
+				{
+					buildTimer.text = "Checking submission...";
+					buildTimerActive = false;
+					submitButton.gameObject.SetActive (false);
+
+					while(submissionStatus.text == "Submitting...")
+						StartCoroutine(submissionWait());
+
+					buildTimer.text = "Time's up!";
+					buildTimerComplete = true;
+
+					if(submissionStatus.text != "Submission accepted!")
+						StartCoroutine(timeOut());
+				}
+				else
+				{
+					buildTimer.text = "Time's up!";
+					buildTimerActive = false;
+					buildTimerComplete = true;
+					submitButton.gameObject.SetActive (false);
+					StartCoroutine(timeOut());
+				}
 			} else {
 				updateBuildTimer ();
 			}
@@ -150,6 +192,10 @@ public class TransitionHandler : MonoBehaviour {
 			Destroy(GameObject.FindGameObjectWithTag("BuildObject"));
 			yield return null;
 		}
+		while (GameObject.FindGameObjectWithTag ("ParentedBuildObject") != null) {
+			Destroy(GameObject.FindGameObjectWithTag("ParentedBuildObject"));
+			yield return null;
+		}
 		while (GameObject.FindGameObjectWithTag ("Finish") != null) {
 			Destroy(GameObject.FindGameObjectWithTag("Finish"));
 			yield return null;
@@ -194,6 +240,16 @@ public class TransitionHandler : MonoBehaviour {
 		//Determine scores and send to final screen
 
 		yield return null;
+	}
+
+	//To be executed if 1 or more players did not successfully submit before time up
+	private IEnumerator timeOut() {
+		yield return new WaitForSeconds (5);
+		quitButton.OnClick ();
+	}
+
+	private IEnumerator submissionWait() {
+		yield return new WaitForSeconds (3);
 	}
 
 	private void updateBuildTimer() {

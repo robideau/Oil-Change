@@ -9,7 +9,7 @@
  * 				3: scale
  * 				4: rotation
  *
- * Last update - 3/30/2016
+ * Last update - 4/4/2016
  */
 
 using UnityEngine;
@@ -126,6 +126,19 @@ public class TrackScanner : MonoBehaviour {
 			scannedLevelData += other.transform.rotation + "\n";
 			if (deleteOnScan) {
 				Destroy (other.gameObject);
+			}
+		}
+		GameObject[] detectedParentedObjects = GameObject.FindGameObjectsWithTag ("ParentedBuildObject");
+		foreach (GameObject other in detectedParentedObjects) {
+			scannedLevelData += other.gameObject.name + "\n";
+			scannedLevelData += other.transform.parent.parent.position + "\n";
+			scannedLevelData += "(" + other.transform.parent.parent.lossyScale.x + ", " + other.transform.parent.parent.lossyScale.y + ", " + other.transform.parent.parent.lossyScale.z + ")" + "\n";
+			scannedLevelData += other.transform.parent.parent.rotation + "\n";
+			if (deleteOnScan) {
+				print ("here");
+				Destroy (other.gameObject);
+				Destroy (other.gameObject.transform.parent.gameObject);
+				Destroy (other.gameObject.transform.parent.parent.gameObject);
 			}
 		}
 		GameObject start = GameObject.FindGameObjectWithTag ("Start");

@@ -3,7 +3,7 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 3/31/2016
+ * Last update - 4/4/2016
  */
 
 using UnityEngine;
@@ -21,6 +21,7 @@ public class ObjectController : MonoBehaviour {
 	public Text buildLimitWarning;
 	public Text buildLimitCounter;
 	public ModularChat chat;
+	public testButtonClicked tbscript;
 
 	private GameObject currentObject;
 	private bool buildMenuTestDir;
@@ -46,65 +47,96 @@ public class ObjectController : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		// Place object
-		if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+		// Check if we're in test mode
+		if(!tbscript.getTestMode())
 		{
-			currentObject = null;
-			newPiecePlaced = true;
-			updateBuildCounterText ();
-			chat.enableInput ();
-		}
-		// Delete object
-		if((Input.GetMouseButtonDown(2) || Input.GetKey("delete")) && !EventSystem.current.IsPointerOverGameObject())
-		{
-			RaycastHit hit;
-			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+			// Rotate object
+			if(Input.GetKeyDown("r"))
 			{
-				string hitTag = hit.collider.gameObject.tag;
-				if (hitTag == "BuildObject" || hitTag == "Finish" || hitTag == "Start") {
-					Destroy(hit.collider.gameObject);
-					buildCount--;
-					updateBuildCounterText ();
+				if(currentObject)
+				{
+					currentObject.transform.Rotate(0, 90, 0);
 				}
 			}
-		}
-		if(Input.GetKeyDown("page up"))
-		{
-			worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y + 5.0f, 0.0f);
-			Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
-														 Camera.main.transform.position.y + 5.0f, 
-														 Camera.main.transform.position.z);
-			// "Refresh" currentObject
-			currentObject.SetActive(false);
-			currentObject.SetActive(true);
-		}
-		if(Input.GetKeyDown("page down"))
-		{
-			worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y - 5.0f, 0.0f);
-			Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
-														 Camera.main.transform.position.y - 5.0f, 
-														 Camera.main.transform.position.z);
-			// "Refresh" currentObject
-			currentObject.SetActive(false);
-			currentObject.SetActive(true);
-		}
-
-		// Move currentObject with mouse pointer
-		if(currentObject)
-		{
-			RaycastHit hit;
-			if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+			// Place object
+			if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 			{
-				if(!currentObject.activeSelf)
+				currentObject = null;
+				newPiecePlaced = true;
+				updateBuildCounterText ();
+				chat.enableInput ();
+			}
+			// Delete object
+			if((Input.GetMouseButtonDown(2) || Input.GetKey("delete")) && !EventSystem.current.IsPointerOverGameObject())
+			{
+				RaycastHit hit;
+				if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+				{
+					string hitTag = hit.collider.gameObject.tag;
+					if (hitTag == "BuildObject" || hitTag == "Finish" || hitTag == "Start") {
+						Destroy(hit.collider.gameObject);
+						buildCount--;
+						updateBuildCounterText ();
+					}
+					else if(hitTag == "ParentedBuildObject")
+					{
+						Destroy(hit.collider.gameObject.transform.parent.parent.gameObject);
+						buildCount--;
+						updateBuildCounterText ();
+					}
+				}
+			}
+			// Move grid up a level
+			if(Input.GetKeyDown("page up") || Input.GetKeyDown("u"))
+			{
+				worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y + 5.0f, 0.0f);
+				Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
+															 Camera.main.transform.position.y + 5.0f, 
+															 Camera.main.transform.position.z);
+				// "Refresh" currentObject
+				currentObject.SetActive(false);
+				currentObject.SetActive(true);
+			}
+			// Move grid down a level
+			if(Input.GetKeyDown("page down") || Input.GetKeyDown("j"))
+			{
+				worldGrid.transform.position = new Vector3(0.0f, worldGrid.transform.position.y - 5.0f, 0.0f);
+				Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, 
+															 Camera.main.transform.position.y - 5.0f, 
+															 Camera.main.transform.position.z);
+				if(currentObject)
+				{
+					// "Refresh" currentObject if it exists
+					currentObject.SetActive(false);
 					currentObject.SetActive(true);
-				if (hit.collider.gameObject.tag == "Grid") {
-					hitPoint = hit.point;
-					hitPoint.x = Mathf.Round(hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
-					hitPoint.z = Mathf.Round(hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
-					currentObject.transform.position = hitPoint; //Snap to grid
 				}
 			}
-			else
+
+			// Move currentObject with mouse pointer
+			if(currentObject)
+			{
+				RaycastHit hit;
+				if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, rayCastDist))
+				{
+					if(!currentObject.activeSelf)
+						currentObject.SetActive(true);
+					if (hit.collider.gameObject.tag == "Grid") {
+						hitPoint = hit.point;
+						hitPoint.x = Mathf.Round(hit.point.x / gridBlockSize) * gridBlockSize; //Snap X
+						hitPoint.z = Mathf.Round(hit.point.z / gridBlockSize) * gridBlockSize; //Snap Z
+						currentObject.transform.position = hitPoint; //Snap to grid
+					}
+				}
+				else
+				{
+					if(currentObject.activeSelf)
+						currentObject.SetActive(false);
+				}
+			}
+		}
+		else
+		{
+			if(currentObject)
 			{
 				if(currentObject.activeSelf)
 					currentObject.SetActive(false);
