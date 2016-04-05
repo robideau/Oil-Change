@@ -63,6 +63,7 @@ public class TransitionHandler : MonoBehaviour {
 	public float buildTimeLimit = 10;
 	public int buildCountLimit;
 	private string defaultBuildTimerText;
+	private bool submittingWait = false;
 	private float startTime;
 	private bool buildTimerActive = false;
 	private bool buildTimerComplete = false;
@@ -108,20 +109,19 @@ public class TransitionHandler : MonoBehaviour {
 				startTime = Time.time;
 			}
 			if (buildTimer.text == "Remaining: 00:00") {
-				if(submissionStatus.text == "Submitting...")
+				if(submissionStatus.text == "Submission accepted!")
 				{
-					buildTimer.text = "Checking submission...";
-					buildTimerActive = false;
-					submitButton.gameObject.SetActive (false);
-
-					while(submissionStatus.text == "Submitting...")
-						StartCoroutine(submissionWait());
-
-					buildTimer.text = "Time's up!";
 					buildTimerComplete = true;
+					buildTimerActive = false;
+					StartCoroutine(submissionWait());
+				}
+				else if(submissionStatus.text == "Submitting...")
+				{
+					submitButton.gameObject.SetActive (false);
+					submittingWait = true;
 
-					if(submissionStatus.text != "Submission accepted!")
-						StartCoroutine(timeOut());
+					buildTimer.text = "Waiting for submission...";
+					buildTimerActive = false;
 				}
 				else
 				{
@@ -133,6 +133,17 @@ public class TransitionHandler : MonoBehaviour {
 				}
 			} else {
 				updateBuildTimer ();
+			}
+		}
+
+		if(submittingWait)
+		{
+			if(submissionStatus.text != "Submitting...")
+			{
+				buildTimerActive = false;
+				buildTimerComplete = true;
+				if(submissionStatus.text != "Submission accepted!" )
+					StartCoroutine(timeOut());
 			}
 		}
 
@@ -248,8 +259,9 @@ public class TransitionHandler : MonoBehaviour {
 		quitButton.OnClick ();
 	}
 
-	private IEnumerator submissionWait() {
-		yield return new WaitForSeconds (3);
+	private IEnumerator submissionWait()
+	{
+		yield return new WaitForSeconds(3);
 	}
 
 	private void updateBuildTimer() {
