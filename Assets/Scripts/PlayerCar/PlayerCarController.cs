@@ -3,7 +3,7 @@
  * 
  * This controller handles player input and the player car's motion and physics.
  *
- * Last update - 4/3/2016
+ * Last update - 4/5/2016
  */
 
 using UnityEngine;
@@ -231,10 +231,12 @@ public class PlayerCarController : MonoBehaviour {
 	public void fullReset() {
 		if (GameObject.FindGameObjectWithTag ("Start") != null) {
 			carBase.transform.position = GameObject.FindGameObjectWithTag ("Start").transform.position;
+			carBase.transform.rotation = GameObject.FindGameObjectWithTag ("Start").transform.rotation;
 		} else {
 			carBase.transform.position = ghostRecorder.getFramePosition (0);
+			carBase.transform.rotation = ghostRecorder.getFrameRotation (0);
 		}
-		carBase.transform.rotation = ghostRecorder.getFrameRotation (0);
+
 		carBase.GetComponent<Rigidbody> ().velocity = new Vector3 (0, 0, 0);
 		carBase.GetComponent<Rigidbody> ().angularVelocity = new Vector3 (0, 0, 0);
 		leftCollider.motorTorque = 0;
