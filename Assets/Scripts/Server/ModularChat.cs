@@ -4,7 +4,7 @@
  * This script implements player chat in a way that can be utilized in both build and play mode.
  * Will leave as open-ended as possible for future use.
  *
- * Last update - 3/30/2016
+ * Last update - 4/7/2016
  */
 
 using UnityEngine;

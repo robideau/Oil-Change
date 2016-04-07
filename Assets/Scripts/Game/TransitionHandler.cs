@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 4/04/2016
+ * Last update - 4/7/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,6 +52,8 @@ public class TransitionHandler : MonoBehaviour {
 	public GameTracker gameTracker;
 	public bool buildModeActive = false;
 	public bool raceModeActive = false;
+	public ScoreKeeper scoreKeeper;
+	public bool opponentFinished = false;
 
 	//Canvas items
 	public ModularChat chat;
@@ -65,8 +67,9 @@ public class TransitionHandler : MonoBehaviour {
 	private string defaultBuildTimerText;
 	private bool submittingWait = false;
 	private float startTime;
-	private bool buildTimerActive = false;
-	private bool buildTimerComplete = false;
+	public bool buildTimerActive = false;
+	public bool buildTimerComplete = false;
+	public bool raceTimerActive = false;
 
 	//Track data to be sent between players
 	private string trackData = "Data not received.";
@@ -152,7 +155,7 @@ public class TransitionHandler : MonoBehaviour {
 		} else {
 			chat.disableInput ();
 		}
-			
+						
 	}
 
 	private IEnumerator testScanner() {
@@ -238,17 +241,22 @@ public class TransitionHandler : MonoBehaviour {
 
 		//Reset timer, start game tracker
 		gameTracker.gameObject.SetActive(true);
+		raceTimerActive = true;
 
 		//Collapse chat
 		chat.ChatUI.SetActive(false);
 
 		//Wait for players to finish
 		while (!gameTracker.playerCar.GetComponent<PlayerCarController> ().hasFinished &&
-		       !raceStatus.gameObject.activeSelf) {
+			!raceStatus.gameObject.activeSelf) {
 			yield return new WaitForSeconds (1);
 		}
-
+		while (!opponentFinished) {
+			yield return new WaitForSeconds (1);
+		}
 		//Determine scores and send to final screen
+		yield return new WaitForSeconds (1);
+		scoreKeeper.outputTextResults ();
 
 		yield return null;
 	}

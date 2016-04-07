@@ -31,6 +31,8 @@ public class GameTracker : MonoBehaviour {
 	private float startTime;
 	public float finalTime;
 
+	public TransitionHandler transitionHandler;
+
 	void Awake() {
 		nv = GetComponent<NetworkView> ();
 	}
@@ -42,6 +44,7 @@ public class GameTracker : MonoBehaviour {
 		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
 		timerText.gameObject.SetActive (true);
 		StartCoroutine (countdown());
+		transitionHandler = GameObject.Find ("GameController").GetComponent<TransitionHandler> ();
 	}
 
 	void Update () { 
@@ -77,7 +80,7 @@ public class GameTracker : MonoBehaviour {
 		int minutes = (int)timerTime / 60;
 		int seconds = (int)timerTime % 60;
 		int ms = (int)(timerTime * 100) % 100;
-		timerText.text = string.Format ("{0:00}:{1:00}:{2:00}", minutes, seconds, ms);
+		timerText.text = string.Format ("{0:00}:{1:00}", minutes, seconds);
 		finalTime = timerTime;
 	}
 
@@ -105,6 +108,7 @@ public class GameTracker : MonoBehaviour {
 		opponentWaitingText.gameObject.SetActive (true);
 		opponentWaitingText.text = playerName + " is finished!";
 		opponentIsWaiting = true;
+		transitionHandler.opponentFinished = true;
 	}
 		
 }
