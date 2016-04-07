@@ -25,6 +25,7 @@ public class ModularChat : MonoBehaviour {
 	public Text chatLogText;
 	public Button sendButton;
 	public NetworkView nv;
+	public accountInfo accInfo;
 
 	//Message data
 	private string senderID = "Unknown";
@@ -39,6 +40,8 @@ public class ModularChat : MonoBehaviour {
 		messageLog = new List<chatMessage> ();
 		chatLogView.transform.FindChild ("Scrollbar Vertical").GetComponent<Scrollbar> ().value = 0f;
 		ChatUI.SetActive (false);
+		accInfo = GameObject.Find ("Script manager").GetComponent<accountInfo> ();
+		senderID = accInfo.getName ();
 	}
 
 	void Update () {
@@ -70,7 +73,7 @@ public class ModularChat : MonoBehaviour {
 
 	//Add message to message log, send message to chat window, clear input field - called when "send" button is clicked or enter key is pressed
 	public void OnSendClick() {
-		assignSenderIDs ();
+		//assignSenderIDs ();
 		nv.RPC ("sendChatMessage", RPCMode.All, chatInput.text, senderID);
 		chatInput.text = "";
 		chatInput.ActivateInputField();
