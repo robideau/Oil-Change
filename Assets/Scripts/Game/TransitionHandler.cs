@@ -227,6 +227,7 @@ public class TransitionHandler : MonoBehaviour {
 		//Transition to race mode
 		buildModeActive = false;
 		raceModeActive = true;
+		chat.ChatUI.SetActive (false);
 		StartCoroutine(raceMode());
 		yield return null;
 	}
