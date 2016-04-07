@@ -3,7 +3,7 @@
  * 
  * This script tracks game data and handles server updates - timers, ghost data, etc.
  *
- * Last update - 3/30/2016
+ * Last update - 4/7/2016
  */
 
 //Warnings to ignore - DEV ONLY, REMOVE FOR FINAL BUILDS
@@ -21,6 +21,7 @@ public class GameTracker : MonoBehaviour {
 	public bool waitingForOpponent;
 	public bool opponentIsWaiting;
 	public UnityEngine.UI.Text opponentWaitingText;
+	public accountInfo accInfo;
 
 	//Reference to player car object
 	public GameObject playerCar;
@@ -45,6 +46,7 @@ public class GameTracker : MonoBehaviour {
 		timerText.gameObject.SetActive (true);
 		StartCoroutine (countdown());
 		transitionHandler = GameObject.Find ("GameController").GetComponent<TransitionHandler> ();
+		accInfo = GameObject.Find ("Script manager").GetComponent<accountInfo> ();
 	}
 
 	void Update () { 
@@ -56,6 +58,7 @@ public class GameTracker : MonoBehaviour {
 		if (playerCar.GetComponent<PlayerCarController>().hasFinished && isPlaying) {
 			stopTimer ();
 			//For debug purposes - replace with player names later
+			/*
 			string opponentName;
 			if (nv.isMine) {
 				opponentName = "Player A";
@@ -63,7 +66,8 @@ public class GameTracker : MonoBehaviour {
 			else {
 				opponentName = "Player B";
 			}
-			nv.RPC ("broadcastPlayerFinished", RPCMode.Others, opponentName); //broadcast to opponent
+			*/
+			nv.RPC ("broadcastPlayerFinished", RPCMode.Others, accInfo.getName()); //broadcast to opponent
 		}
 	}
 
