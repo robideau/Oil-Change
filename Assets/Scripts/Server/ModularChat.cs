@@ -104,7 +104,9 @@ public class ModularChat : MonoBehaviour {
 	[RPC] void sendChatMessage(string message, string senderID) {
 		chatMessage sentMessage = new chatMessage (DateTime.Now.ToShortTimeString(), senderID, message); 
 		messageLog.Add (sentMessage);
-		chatLogText.text += ("\n" + senderID + ": " + message);
+		if (message != "") {
+			chatLogText.text += ("\n" + senderID + ": " + message);
+		}
 	}
 
 	public void disableInput() {
