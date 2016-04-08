@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using UnityEngine.UI;
 
 /**
 *create by Ryan Young
@@ -12,6 +14,7 @@ public class accountInfo : MonoBehaviour {
     private List<string> friends;
     private int friendsCount;
     private stats playerRecord;
+    public Text warning;
 
     public accountInfo()
     {
@@ -37,9 +40,41 @@ public class accountInfo : MonoBehaviour {
         userName = existingPlayer;
         friends = new List<string>();
         friendsCount = 0;
+        //wait until php is ready     StartCoroutine(loadFriends());
+
+        
 
         //at this point the player is know to exist and stats will access database to get player stats
         playerRecord = new stats(userName);
+    }
+
+    /**
+    *loads friends list from the database
+    *not functional until php script is finished
+    */
+    private IEnumerator loadFriends()
+    {
+        //need to change the php script name here
+        string post_url = "http://proj-309-38.cs.iastate.edu/php/login.php?" + "username=" + WWW.EscapeURL(userName);
+        WWW f_check = new WWW(post_url);
+        yield return f_check;
+        if (f_check.error != null)
+        {
+            Debug.Log("problem loading friends list");
+        }
+        else if(f_check.Equals("none"))
+        {
+            Debug.Log("you have no friends");
+        }
+        else
+        {
+            String[] friends = f_check.text.Split(","[0]);
+            foreach(string friend in friends)
+            {
+                this.addFriend(friend);
+            }
+        }
+
     }
 
     /**
