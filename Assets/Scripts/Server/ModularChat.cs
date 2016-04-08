@@ -4,7 +4,7 @@
  * This script implements player chat in a way that can be utilized in both build and play mode.
  * Will leave as open-ended as possible for future use.
  *
- * Last update - 3/30/2016
+ * Last update - 4/7/2016
  */
 
 using UnityEngine;
@@ -25,6 +25,7 @@ public class ModularChat : MonoBehaviour {
 	public Text chatLogText;
 	public Button sendButton;
 	public NetworkView nv;
+	public accountInfo accInfo;
 
 	//Message data
 	private string senderID = "Unknown";
@@ -39,6 +40,8 @@ public class ModularChat : MonoBehaviour {
 		messageLog = new List<chatMessage> ();
 		chatLogView.transform.FindChild ("Scrollbar Vertical").GetComponent<Scrollbar> ().value = 0f;
 		ChatUI.SetActive (false);
+		accInfo = GameObject.Find ("Script manager").GetComponent<accountInfo> ();
+		senderID = accInfo.getName ();
 	}
 
 	void Update () {
@@ -70,7 +73,7 @@ public class ModularChat : MonoBehaviour {
 
 	//Add message to message log, send message to chat window, clear input field - called when "send" button is clicked or enter key is pressed
 	public void OnSendClick() {
-		assignSenderIDs ();
+		//assignSenderIDs ();
 		nv.RPC ("sendChatMessage", RPCMode.All, chatInput.text, senderID);
 		chatInput.text = "";
 		chatInput.ActivateInputField();
@@ -101,7 +104,9 @@ public class ModularChat : MonoBehaviour {
 	[RPC] void sendChatMessage(string message, string senderID) {
 		chatMessage sentMessage = new chatMessage (DateTime.Now.ToShortTimeString(), senderID, message); 
 		messageLog.Add (sentMessage);
-		chatLogText.text += ("\n" + senderID + ": " + message);
+		if (message != "") {
+			chatLogText.text += ("\n" + senderID + ": " + message);
+		}
 	}
 
 	public void disableInput() {

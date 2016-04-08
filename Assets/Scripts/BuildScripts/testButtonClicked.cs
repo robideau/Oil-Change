@@ -9,6 +9,7 @@ public class testButtonClicked : MonoBehaviour {
 	public Text buttonText;
 	public ObjectController objectController;
 	public GameObject buildMenuUI;
+	public ScoreKeeper scoreKeeper;
 	private bool inTestMode;
 
 	void Start()
@@ -38,6 +39,7 @@ public class testButtonClicked : MonoBehaviour {
 			mainCamera.SetActive(false);
 			buildMenuUI.SetActive(false);
 			inTestMode = true;
+			scoreKeeper.startRecordingTestTime();
 		}
 	}
 

@@ -3,7 +3,7 @@
  * 
  * This script tracks game data and handles server updates - timers, ghost data, etc.
  *
- * Last update - 3/30/2016
+ * Last update - 4/7/2016
  */
 
 //Warnings to ignore - DEV ONLY, REMOVE FOR FINAL BUILDS
@@ -21,6 +21,7 @@ public class GameTracker : MonoBehaviour {
 	public bool waitingForOpponent;
 	public bool opponentIsWaiting;
 	public UnityEngine.UI.Text opponentWaitingText;
+	public accountInfo accInfo;
 
 	//Reference to player car object
 	public GameObject playerCar;
@@ -30,6 +31,8 @@ public class GameTracker : MonoBehaviour {
 	public UnityEngine.UI.Text timerText;
 	private float startTime;
 	public float finalTime;
+
+	public TransitionHandler transitionHandler;
 
 	void Awake() {
 		nv = GetComponent<NetworkView> ();
@@ -42,6 +45,8 @@ public class GameTracker : MonoBehaviour {
 		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
 		timerText.gameObject.SetActive (true);
 		StartCoroutine (countdown());
+		transitionHandler = GameObject.Find ("GameController").GetComponent<TransitionHandler> ();
+		accInfo = GameObject.Find ("Script manager").GetComponent<accountInfo> ();
 	}
 
 	void Update () { 
@@ -53,6 +58,7 @@ public class GameTracker : MonoBehaviour {
 		if (playerCar.GetComponent<PlayerCarController>().hasFinished && isPlaying) {
 			stopTimer ();
 			//For debug purposes - replace with player names later
+			/*
 			string opponentName;
 			if (nv.isMine) {
 				opponentName = "Player A";
@@ -60,7 +66,8 @@ public class GameTracker : MonoBehaviour {
 			else {
 				opponentName = "Player B";
 			}
-			nv.RPC ("broadcastPlayerFinished", RPCMode.Others, opponentName); //broadcast to opponent
+			*/
+			nv.RPC ("broadcastPlayerFinished", RPCMode.Others, accInfo.getName()); //broadcast to opponent
 		}
 	}
 
@@ -77,7 +84,7 @@ public class GameTracker : MonoBehaviour {
 		int minutes = (int)timerTime / 60;
 		int seconds = (int)timerTime % 60;
 		int ms = (int)(timerTime * 100) % 100;
-		timerText.text = string.Format ("{0:00}:{1:00}:{2:00}", minutes, seconds, ms);
+		timerText.text = string.Format ("{0:00}:{1:00}", minutes, seconds);
 		finalTime = timerTime;
 	}
 
@@ -105,6 +112,7 @@ public class GameTracker : MonoBehaviour {
 		opponentWaitingText.gameObject.SetActive (true);
 		opponentWaitingText.text = playerName + " is finished!";
 		opponentIsWaiting = true;
+		transitionHandler.opponentFinished = true;
 	}
 		
 }
