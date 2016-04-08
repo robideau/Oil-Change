@@ -18,16 +18,119 @@ Platform assembly: C:\Users\Ryan Young\Documents\G38_OilChange\oilChange_Data\Ma
 Loading C:\Users\Ryan Young\Documents\G38_OilChange\oilChange_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Ryan Young\Documents\G38_OilChange\oilChange_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Ryan Young\Documents\G38_OilChange\oilChange_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.046 seconds
+- Completed reload, in  0.181 seconds
 Platform assembly: C:\Users\Ryan Young\Documents\G38_OilChange\oilChange_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Ryan Young\Documents\G38_OilChange\oilChange_Data\Managed\System.dll (this message is harmless)
 desktop: 1440x900 60Hz; virtual: 1440x900 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.502377 ms
+UnloadTime: 0.539613 ms
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 5cc -> priority: 1 
+  Thread -> id: 108c -> priority: 1 
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+!!
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+http://proj-309-38.cs.iastate.edu/php/creatematch.php?sessionName=test&hostUser=ryoung&buildTime=300&buildLimit=30&keywords=&pass=&inviteOnly=FALSE
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 3.414240 ms
+Server has been initialized on port 7531
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Server started on listening port 7531
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Registered on Master Server as room test of type OilChangeSession
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Master Server port 23466
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Master Server IP 206.127.180.23
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+Random: 3
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+sky5X4 (Instance)
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+Unloading 26 unused Assets to reduce memory usage. Loaded Objects now: 836.
+Total: 0.908871 ms (FindLiveObjects: 0.066404 ms CreateObjectMapping: 0.032271 ms MarkObjects: 0.773269 ms  DeleteObjects: 0.036305 ms)
+
+The connection request to 206.127.180.23:50005 failed. Are you sure the server can be connected to?
+ 
+(Filename:  Line: 666)
+
+Failed to connect to master server at 206.127.180.23:23466
+ 
+(Filename:  Line: 236)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.574156 ms
+
+Unloading 70 unused Assets to reduce memory usage. Loaded Objects now: 1877.
+Total: 1.455310 ms (FindLiveObjects: 0.110467 ms CreateObjectMapping: 0.045303 ms MarkObjects: 1.221344 ms  DeleteObjects: 0.077575 ms)
+
+IOException: Sharing violation on path C:\Users\Ryan Young\Documents\G38_OilChange\settings.txt
+  at System.IO.FileStream..ctor (System.String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Boolean anonymous, FileOptions options) [0x00000] in <filename unknown>:0 
+  at System.IO.FileStream..ctor (System.String path, FileMode mode) [0x00000] in <filename unknown>:0 
+  at writeSettings.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+testing reloading: ryoung
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
+
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
+
 
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
