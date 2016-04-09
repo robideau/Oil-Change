@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 4/7/2016
+ * Last update - 4/9/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -60,6 +60,25 @@ public class TransitionHandler : MonoBehaviour {
 	public Text buildTimer;
 	public Text submissionStatus;
 	public QuitButton quitButton;
+	public GameObject endGameCanvas;
+	public Text raceStatusText;
+
+	//Results screen items
+	public Text bTitle;
+	public Text bTimeTitle;
+	public Text bTime;
+	public Text aTestTimeTitle;
+	public Text aTestTime;
+	public Text bColumnDiff;
+
+	public Text aTitle;
+	public Text aTimeTitle;
+	public Text aTime;
+	public Text bTestTimeTitle;
+	public Text bTestTime;
+	public Text aColumnDiff;
+
+	public Text winner;
 
 	//Build mode timer info
 	public float buildTimeLimit = 10;
@@ -239,6 +258,7 @@ public class TransitionHandler : MonoBehaviour {
 		//Relocate car to start point, set active
 		gameTracker.playerCar.SetActive(true);
 		gameTracker.playerCar.GetComponent<PlayerCarController> ().relocateToStart ();
+		gameTracker.playerCar.GetComponent<PlayerCarController> ().hasFinished = false;
 
 		//Reset timer, start game tracker
 		gameTracker.gameObject.SetActive(true);
@@ -255,9 +275,18 @@ public class TransitionHandler : MonoBehaviour {
 		while (!opponentFinished) {
 			yield return new WaitForSeconds (1);
 		}
+		while (!gameTracker.playerCar.GetComponent<PlayerCarController> ().hasFinished) {
+			yield return new WaitForSeconds (1);
+		}
 		//Determine scores and send to final screen
 		yield return new WaitForSeconds (1);
-		scoreKeeper.outputTextResults ();
+		//scoreKeeper.outputTextResults ();
+		chat.ChatUI.SetActive(false);
+		raceTimer.gameObject.SetActive (false);
+		raceStatusText.gameObject.SetActive (false);
+		createEndResults ();
+		yield return new WaitForSeconds (.5f);
+		endGameCanvas.SetActive (true);
 
 		yield return null;
 	}
@@ -278,5 +307,37 @@ public class TransitionHandler : MonoBehaviour {
 		int minutes = (int)timerTime / 60;
 		int seconds = (int)timerTime % 60;
 		buildTimer.text = string.Format ("Remaining: {0:00}:{1:00}", minutes, seconds);
+	}
+
+	private void createEndResults() {
+		//Left column
+		bTitle.text = scoreKeeper.getOpponentName () + "'s Track";
+		bTimeTitle.text = scoreKeeper.getPlayerName () + "'s Time:";
+		bTime.text = scoreKeeper.getSelfRaceTime ().ToString() + "s";
+		aTestTimeTitle.text = scoreKeeper.getOpponentName ().ToString() + "'s Test Time:";
+		aTestTime.text = scoreKeeper.getOpponentTestTime ().ToString() + "s";
+		bColumnDiff.text = (scoreKeeper.getSelfRaceTime () - scoreKeeper.getOpponentTestTime ()).ToString();
+		if (scoreKeeper.getSelfRaceTime () - scoreKeeper.getOpponentTestTime () >= 0) {
+			bColumnDiff.color = Color.red;
+		}
+
+		//Right column
+		aTitle.text = scoreKeeper.getPlayerName () + "'s Track";
+		aTimeTitle.text = scoreKeeper.getOpponentName () + "'s Time:";
+		aTime.text = scoreKeeper.getOpponentRaceTime ().ToString() + "s";
+		bTestTimeTitle.text = scoreKeeper.getPlayerName ().ToString() + "'s Test Time:";
+		bTestTime.text = scoreKeeper.getSelfTestTime().ToString() + "s";
+		aColumnDiff.text = (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime ()).ToString();
+		if (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime () >= 0) {
+			bColumnDiff.color = Color.red;
+		}
+
+		if ((scoreKeeper.getSelfRaceTime () - scoreKeeper.getOpponentTestTime ()) > (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime ())) {
+			winner.text = scoreKeeper.getOpponentName () + " wins!";
+		} else if ((scoreKeeper.getSelfRaceTime () - scoreKeeper.getOpponentTestTime ()) < (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime ())) {
+			winner.text = scoreKeeper.getPlayerName () + " wins!";
+		} else {
+			winner.text = "Draw!";
+		}
 	}
 }
