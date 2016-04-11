@@ -40,12 +40,21 @@ public class accountInfo : MonoBehaviour {
         userName = existingPlayer;
         friends = new List<string>();
         friendsCount = 0;
-        //wait until php is ready     StartCoroutine(loadFriends());
+        StartCoroutine(loadFriends());
 
         
 
         //at this point the player is know to exist and stats will access database to get player stats
         playerRecord = new stats(userName);
+    }
+
+    internal bool hasFriend(string friend)
+    {
+        if (friends.Contains(friend))
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -55,14 +64,14 @@ public class accountInfo : MonoBehaviour {
     private IEnumerator loadFriends()
     {
         //need to change the php script name here
-        string post_url = "http://proj-309-38.cs.iastate.edu/php/login.php?" + "username=" + WWW.EscapeURL(userName);
+        string post_url = "http://proj-309-38.cs.iastate.edu/php/getfriends.php?" + "username=" + WWW.EscapeURL(userName);
         WWW f_check = new WWW(post_url);
         yield return f_check;
         if (f_check.error != null)
         {
             Debug.Log("problem loading friends list");
         }
-        else if(f_check.Equals("none"))
+        else if(f_check.text.Equals("none"))
         {
             Debug.Log("you have no friends");
         }
@@ -71,7 +80,9 @@ public class accountInfo : MonoBehaviour {
             String[] friends = f_check.text.Split(","[0]);
             foreach(string friend in friends)
             {
+                Debug.Log("friend found:" + friend);
                 this.addFriend(friend);
+                friendsCount++;
             }
         }
 
@@ -112,13 +123,8 @@ public class accountInfo : MonoBehaviour {
 
     public string[] getFriends()
     {
-        string[] friendsArray = new string[friendsCount];
-        for(int i = 0; i < friendsCount; i++)
-        {
-            friendsArray[i] = friends[i];
-        }
 
-        return friendsArray;
+        return friends.ToArray();
     }
 
     public void addFriend(string Friend)
@@ -127,6 +133,7 @@ public class accountInfo : MonoBehaviour {
         if (Friend != null)
         {
             friends.Add(Friend);
+            friendsCount++;
         }
         
     }

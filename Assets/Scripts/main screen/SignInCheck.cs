@@ -90,7 +90,7 @@ public class SignInCheck : MonoBehaviour {
             string check = pn_check.text;
             if (check.Equals("t"))
             {
-                curAccount.loadAccount(name);
+                //curAccount.loadAccount(name);
                 passed = 't';
             }
             else if (check.Equals("f"))
