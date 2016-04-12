@@ -1,0 +1,4 @@
+Display: Full Screen
+Resolution: 1600*1200
+Quality: Low
+Audio: Low
