@@ -1,4 +1,4 @@
-Display: Full Screen
-Resolution: 1600*1200
-Quality: Low
-Audio: Low
+Display,1,Windowed
+Resolution,2,1280*960
+Quality,2,High
+Audio,1,Low
