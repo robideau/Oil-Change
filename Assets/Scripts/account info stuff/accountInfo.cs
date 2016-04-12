@@ -123,7 +123,7 @@ public class accountInfo : MonoBehaviour {
 
     public string[] getFriends()
     {
-
+        friends.Sort();
         return friends.ToArray();
     }
 

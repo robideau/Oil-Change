@@ -18,7 +18,14 @@ public class FriendManager : MonoBehaviour {
     public GameObject friendHolderMatchMaking;
 
     //list of friends in matchmaking used for updating display
-    private List<Text> prefabs = new List<Text>();
+    private List<Text> MatchMakingPrefabs = new List<Text>();
+
+    //for acount info screen used to display friends list
+    public GameObject prefabFriendAcountInfo;
+    public GameObject friendHolderAccountInfo;
+
+    //list of friends in account info for updating display
+    private List<GameObject> AccountInfoPrefabs = new List<GameObject>();
 
     /**
     *used to add a new friend to players friends list and update display on successful add
@@ -53,11 +60,11 @@ public class FriendManager : MonoBehaviour {
         //get uptodate friends list
         string[] friends = player.getFriends();
         //clear display
-        foreach(Text prefab in prefabs)
+        foreach(Text prefab in MatchMakingPrefabs)
         {
             GameObject.Destroy(prefab.gameObject);
         }
-        prefabs = new List<Text>();
+        MatchMakingPrefabs = new List<Text>();
         //load in display holding all friends
         foreach(string friend in friends)
         {
@@ -65,8 +72,32 @@ public class FriendManager : MonoBehaviour {
             Text prefabclone;
             prefabclone = Instantiate(prefabFriendMatchMaking);
             prefabclone.text = friend;
-            prefabs.Add(prefabclone);
+            MatchMakingPrefabs.Add(prefabclone);
             prefabclone.transform.SetParent(friendHolderMatchMaking.transform);
+            prefabclone.transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
+    public void updatePlayerInfoListDisplay()
+    {
+        //get uptodate friends list
+        string[] friends = player.getFriends();
+        //clear display
+        foreach (GameObject prefab in AccountInfoPrefabs)
+        {
+            GameObject.Destroy(prefab.gameObject);
+        }
+        AccountInfoPrefabs = new List<GameObject>();
+        //load in display holding all friends
+        foreach (string friend in friends)
+        {
+            Debug.Log(friend + " added to list AI");
+            GameObject prefabclone;
+            prefabclone = Instantiate(prefabFriendAcountInfo);
+            prefabclone.GetComponent<setFriendNameAndImage>().setName(friend);
+            AccountInfoPrefabs.Add(prefabclone);
+            prefabclone.transform.SetParent(friendHolderAccountInfo.transform);
+            prefabclone.transform.localScale = new Vector3(1, 1, 1);
         }
     }
 
