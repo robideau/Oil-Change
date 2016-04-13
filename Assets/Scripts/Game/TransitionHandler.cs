@@ -40,6 +40,7 @@ public class TransitionHandler : MonoBehaviour {
 	//Player info
 	//private string playerNameA = "";
 	//private string playerNameB = "";
+	public accountInfo accInfo;
 
 	//Track scanner and replicator
 	public TrackScanner scanner;
@@ -117,7 +118,7 @@ public class TransitionHandler : MonoBehaviour {
 		sideRaceCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
 		frontRaceCamera.GetComponent<Skybox>().material = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
 		worldEnd.GetComponent<MeshRenderer> ().material = worldEnd.transform.FindChild ("MaterialPool").GetComponent<MeshRenderer> ().materials [randomSky];
-
+		accInfo = GameObject.Find ("Script manager").GetComponent<accountInfo> ();
 		//Transition to build mode, activate timer
 		StartCoroutine (buildMode ());
 
@@ -334,10 +335,13 @@ public class TransitionHandler : MonoBehaviour {
 
 		if ((scoreKeeper.getSelfRaceTime () - scoreKeeper.getOpponentTestTime ()) > (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime ())) {
 			winner.text = scoreKeeper.getOpponentName () + " wins!";
+			accInfo.getStats ().completeMatch (-1, 0);
 		} else if ((scoreKeeper.getSelfRaceTime () - scoreKeeper.getOpponentTestTime ()) < (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime ())) {
 			winner.text = scoreKeeper.getPlayerName () + " wins!";
+			accInfo.getStats ().completeMatch (1, 0);
 		} else {
 			winner.text = "Draw!";
+			accInfo.getStats ().completeMatch (0, 0);
 		}
 	}
 }
