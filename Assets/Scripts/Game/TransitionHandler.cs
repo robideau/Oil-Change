@@ -63,6 +63,7 @@ public class TransitionHandler : MonoBehaviour {
 	public QuitButton quitButton;
 	public GameObject endGameCanvas;
 	public Text raceStatusText;
+	public ControlsButton controlButton;
 
 	//Results screen items
 	public Text bTitle;
@@ -248,6 +249,7 @@ public class TransitionHandler : MonoBehaviour {
 		buildModeActive = false;
 		raceModeActive = true;
 		chat.ChatUI.SetActive (false);
+		controlButton.forceCloseBuildControls ();
 		StartCoroutine(raceMode());
 		yield return null;
 	}
