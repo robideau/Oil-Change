@@ -106,11 +106,11 @@ public class TransitionHandler : MonoBehaviour {
 		nv = netManager.GetComponent<NetworkView>();
 
 		//Set player colors
-		int randomColor = Random.Range(0, 8);
+		int randomColor = UnityEngine.Random.Range(0, 8);
 		gameTracker.playerCar.transform.FindChild ("DefaultCar").FindChild ("Frame").gameObject.GetComponent<MeshRenderer> ().material = gameTracker.playerCar.transform.FindChild ("DefaultCar").GetComponent<MeshRenderer> ().materials[randomColor];
 
 		//Set skybox
-		int randomSky = Random.Range(0, 4);
+		int randomSky = UnityEngine.Random.Range(0, 4);
 		RenderSettings.skybox = skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky];
 		print ("Random: " + randomSky);
 		print (skyboxPool.GetComponent<MeshRenderer> ().materials [randomSky].name);
