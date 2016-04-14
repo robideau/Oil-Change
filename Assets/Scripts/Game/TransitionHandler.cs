@@ -336,9 +336,9 @@ public class TransitionHandler : MonoBehaviour {
 			bColumnDiff.color = Color.red;
 		}
 
-        float selfTime = (float)(scoreKeeper.getSelfRaceTime() - scoreKeeper.getOpponentTestTime())
+        float selfTime = (float)(scoreKeeper.getSelfRaceTime() - scoreKeeper.getOpponentTestTime());
 
-        float opponentTime = (float) (scoreKeeper.getOpponentRaceTime() - scoreKeeper.getSelfTestTime())
+        float opponentTime = (float)(scoreKeeper.getOpponentRaceTime() - scoreKeeper.getSelfTestTime());
 
         int result = 0;
         float score = 0.0f;
