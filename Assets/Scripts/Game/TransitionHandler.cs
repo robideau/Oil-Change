@@ -9,6 +9,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class TransitionHandler : MonoBehaviour {
 
@@ -335,15 +336,36 @@ public class TransitionHandler : MonoBehaviour {
 			bColumnDiff.color = Color.red;
 		}
 
-		if ((scoreKeeper.getSelfRaceTime () - scoreKeeper.getOpponentTestTime ()) > (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime ())) {
-			winner.text = scoreKeeper.getOpponentName () + " wins!";
-			accInfo.getStats ().completeMatch (-1, 0);
-		} else if ((scoreKeeper.getSelfRaceTime () - scoreKeeper.getOpponentTestTime ()) < (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime ())) {
-			winner.text = scoreKeeper.getPlayerName () + " wins!";
-			accInfo.getStats ().completeMatch (1, 0);
-		} else {
-			winner.text = "Draw!";
-			accInfo.getStats ().completeMatch (0, 0);
-		}
-	}
+        float selfTime = (float)(scoreKeeper.getSelfRaceTime() - scoreKeeper.getOpponentTestTime())
+
+        float opponentTime = (float) (scoreKeeper.getOpponentRaceTime() - scoreKeeper.getSelfTestTime())
+
+        int result = 0;
+        float score = 0.0f;
+
+        if (selfTime > opponentTime)
+        {
+            winner.text = scoreKeeper.getOpponentName() + " wins!";
+            result = -1;
+        }
+        else if (selfTime < opponentTime)
+        {
+            winner.text = scoreKeeper.getPlayerName() + " wins!";
+            result = 1;  
+        }
+        else {
+            winner.text = "Draw!";
+            result = 0;
+        }
+        score = selfTime - opponentTime;
+        StartCoroutine(forwardPlayerStats(result, score));
+    }
+
+    private IEnumerator forwardPlayerStats(int result, float score)
+    {
+        string name = accInfo.getName();
+        string post_url = "http://proj-309-38.cs.iastate.edu/php/updatestats.php?" + "username=" + WWW.EscapeURL(name) + "&result=" + score + "&score=" + score;
+        WWW f_check = new WWW(post_url);
+        yield return f_check;
+    }
 }
