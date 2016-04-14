@@ -28,7 +28,7 @@
 		mysqli_query($database, $query) or die('Query failed: ' . mysqli_error());
 		
 		//Create entry in leaderboards table with default values
-		$query = "INSERT INTO leaderboard values('$username', 0, 0, 0, 0, 0.0, NOW())";
+		$query = "INSERT INTO leaderboard values('$username', 0, 0, 0, 0, 100.0, NOW(), 0)";
 		mysqli_query($database, $query) or die('Query failed: ' . mysqli_error());
 		
 		echo 'success';
