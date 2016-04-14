@@ -22,7 +22,7 @@ public class writeSettings : MonoBehaviour {
 	public Dropdown displayDrop;
 	public Dropdown resolutionDrop;
 	public Dropdown qualityDrop;
-	public Dropdown audioDrop;
+	public Slider audioSlider;
 	public bool fullScreen = false;
 
 	void Start() {
@@ -38,14 +38,14 @@ public class writeSettings : MonoBehaviour {
 			displayDrop.value = Int32.Parse (strings [1]);
 			resolutionDrop.value = Int32.Parse (strings [4]);
 			qualityDrop.value = Int32.Parse (strings [7]);
-			audioDrop.value = Int32.Parse (strings [10]);
+			audioSlider.value = Convert.ToSingle (strings [10]);
 
 		} else {
 			//make new file and set to default
 			displayDrop.value = 0;
 			resolutionDrop.value = 0;
 			qualityDrop.value = 0;
-			audioDrop.value = 0;
+			audioSlider.value = 0.5f;
 			updateFile ();
 		}
 	}
@@ -102,28 +102,8 @@ public class writeSettings : MonoBehaviour {
 
 	//a function that will be called when audio is changed
 	public void updateAudio() {
-		switch (audioDrop.value) {
-		case 0:
-			audioText = "0,Off";
-			AudioListener.volume = 0;
-			break;
-		case 1:
-			audioText = "1,Low";
-			AudioListener.volume = 0.25F;
-			break;
-		case 2:
-			audioText = "2,Medium";
-			AudioListener.volume = 0.5F;
-			break;
-		case 3:
-			audioText = "3,High";
-			AudioListener.volume = 0.75F;
-			break;
-		case 4:
-			audioText = "4,Full";
-			AudioListener.volume = 1;
-			break;
-		}
+		audioText = audioSlider.value.ToString() + ",something";
+		AudioListener.volume = audioSlider.value;
 	}
 
 	//called after exiting to update the settings file
