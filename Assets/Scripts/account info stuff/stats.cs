@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class stats : MonoBehaviour {
 
@@ -10,6 +11,8 @@ public class stats : MonoBehaviour {
     private int rank;
     private int HighScore;
     private int LastScore;
+
+    bool updating = false;
 
     /**
     *new player made so all stats default to zero
@@ -42,14 +45,38 @@ public class stats : MonoBehaviour {
         HighScore = 0;
         LastScore = 0;
         rank = 1;
+        updateRank(playerName);
+    }
+
+    public void updateRank(string playerName)
+    {
+        Debug.Log("updating leaderboard");
+        updateLeaderBoard();
+        Debug.Log("Leaderboard updated");
         fetchStats(playerName);
     }
 
+    //updates leaderboard in database
+    IEnumerator updateLeaderBoard()
+    {
+        updating = true;
+        string post_url = "http://proj-309-38.cs.iastate.edu/php/updaterankings.php";
+        WWW pStat_check = new WWW(post_url);
+        yield return pStat_check;
+        updating = false;
+    }
+
     /**
-    *actually fetches player stats
-    */
+*actually fetches player stats
+*/
     IEnumerator fetchStats(string playerName)
     {
+        //wait for leaderboards to update
+        while (updating)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
         //connect to server and gather stat information
         string post_url = "http://proj-309-38.cs.iastate.edu/php/profileinfo.php?" + "username=" + WWW.EscapeURL(playerName);
         WWW pStat_check = new WWW(post_url);

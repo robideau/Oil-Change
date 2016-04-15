@@ -14,7 +14,7 @@ public class accountInfo : MonoBehaviour {
     private List<string> friends;
     private int friendsCount;
     private stats playerRecord;
-    public Text warning;
+    //public Text warning;
 
     public accountInfo()
     {
@@ -55,6 +55,11 @@ public class accountInfo : MonoBehaviour {
             return true;
         }
         return false;
+    }
+
+    public void updateRank()
+    {
+        playerRecord.updateRank(userName);
     }
 
     /**
