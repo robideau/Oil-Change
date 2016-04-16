@@ -1,4 +1,12 @@
-﻿using UnityEngine;
+﻿/* David Robideau
+ * 4/16/2016
+ * 
+ * This script describes the functionality of the quit button and handles all necessary database operations.
+ *
+ * Last update - 4/16/2016
+ */
+
+using UnityEngine;
 using System.Collections;
 
 public class ControlsButton : MonoBehaviour {
@@ -19,5 +27,9 @@ public class ControlsButton : MonoBehaviour {
 
 	public void forceCloseBuildControls() {
 		buildControls.SetActive (false);
+	}
+
+	public void forceCloseRaceControls() {
+		raceControls.SetActive (false);
 	}
 }
