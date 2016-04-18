@@ -367,7 +367,7 @@ public class TransitionHandler : MonoBehaviour {
     private IEnumerator forwardPlayerStats(int result, float score)
     {
         string name = accInfo.getName();
-        string post_url = "http://proj-309-38.cs.iastate.edu/php/updatestats.php?" + "username=" + WWW.EscapeURL(name) + "&result=" + score + "&score=" + score;
+        string post_url = "http://proj-309-38.cs.iastate.edu/php/updatestats.php?" + "username=" + WWW.EscapeURL(name) + "&result=" + result + "&score=" + score;
         WWW f_check = new WWW(post_url);
         yield return f_check;
     }
