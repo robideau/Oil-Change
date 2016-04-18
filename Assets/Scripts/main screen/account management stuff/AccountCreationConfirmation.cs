@@ -50,7 +50,10 @@ public class AccountCreationConfirmation : MonoBehaviour {
             accountInfo curAccount = cur.GetComponent<accountInfo>();
             curAccount.newAccount(name, pass);
 
-            //account created successfully transistion to next screen
+            //account created successfully transistion to next screen and clear fields
+            nameField.text = "";
+            passField.text = "";
+            passConfirmField.text = "";
             accountScreen.SetActive(false);
             mainScreen.SetActive(true);
         }

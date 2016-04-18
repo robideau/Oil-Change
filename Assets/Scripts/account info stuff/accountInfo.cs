@@ -13,7 +13,7 @@ public class accountInfo : MonoBehaviour {
     private string userName;
     private List<string> friends;
     private int friendsCount;
-    private stats playerRecord;
+    public stats playerRecord;
     //public Text warning;
 
     public accountInfo()
@@ -32,8 +32,6 @@ public class accountInfo : MonoBehaviour {
 	public void loadAccount(string existingPlayer)
     {
         //          todo
-        //load in player friends list
-        //load in player IP?
         //have stats loaded in
 
         //set player name to previously found player name
@@ -42,10 +40,10 @@ public class accountInfo : MonoBehaviour {
         friendsCount = 0;
         StartCoroutine(loadFriends());
 
-        
+
 
         //at this point the player is know to exist and stats will access database to get player stats
-        playerRecord = new stats(userName);
+        playerRecord.loadStats(userName);
     }
 
     internal bool hasFriend(string friend)
@@ -102,7 +100,7 @@ public class accountInfo : MonoBehaviour {
         //set username email initialize empty friends list and new stats with 0 stats so far
         userName = newPlayerName;
         friends = new List<string>();
-        playerRecord = new stats();
+        playerRecord.setNew();
         friendsCount = 0;
 
     }

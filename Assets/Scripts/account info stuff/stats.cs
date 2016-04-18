@@ -12,12 +12,12 @@ public class stats : MonoBehaviour {
     private int HighScore;
     private int LastScore;
 
-    bool updating = false;
+    private bool updating = false;
 
     /**
     *new player made so all stats default to zero
     */
-	public stats()
+	public void setNew()
     {
         playedGames = 0;
         wonGames = 0;
@@ -35,7 +35,7 @@ public class stats : MonoBehaviour {
     *this stats constructor will fetch existing statistics from the data base
     *
     */
-    public stats(string playerName)
+    public void loadStats(string playerName)
     {
         //unity does not allow constructor calls from other constructors... go figure
         playedGames = 0;
@@ -51,25 +51,25 @@ public class stats : MonoBehaviour {
     public void updateRank(string playerName)
     {
         Debug.Log("updating leaderboard");
-        updateLeaderBoard();
+        StartCoroutine(updateLeaderBoard());
         Debug.Log("Leaderboard updated");
-        fetchStats(playerName);
+        StartCoroutine(fetchStats(playerName));
     }
 
     //updates leaderboard in database
-    IEnumerator updateLeaderBoard()
+    private IEnumerator updateLeaderBoard()
     {
         updating = true;
-        string post_url = "http://proj-309-38.cs.iastate.edu/php/updaterankings.php";
-        WWW pStat_check = new WWW(post_url);
-        yield return pStat_check;
+        string post_url = "http://proj-309-38.cs.iastate.edu/php/updaterankings.php?";
+        WWW u_check = new WWW(post_url);
+        yield return u_check;
         updating = false;
     }
 
     /**
 *actually fetches player stats
 */
-    IEnumerator fetchStats(string playerName)
+    private IEnumerator fetchStats(string playerName)
     {
         //wait for leaderboards to update
         while (updating)
@@ -82,7 +82,7 @@ public class stats : MonoBehaviour {
         WWW pStat_check = new WWW(post_url);
         yield return pStat_check;
         string breakDown = pStat_check.text;
-        
+        Debug.Log("while fetching stats: " + breakDown);
         //user does not exist could not fetch stats (maybe add a temporary warning about how the player stats failed to load
         if (breakDown.Equals("nouser"))
         {
@@ -93,6 +93,7 @@ public class stats : MonoBehaviour {
         {
             string[] eachStat = breakDown.Split(","[0]);
             rank = int.Parse(eachStat[0]);
+            Debug.Log("" + rank);
             wonGames = int.Parse(eachStat[0]);
             lostGames = int.Parse(eachStat[1]);
             tiedGames = int.Parse(eachStat[2]);
