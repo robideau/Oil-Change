@@ -10,7 +10,7 @@ public class stats : MonoBehaviour {
     private int tiedGames;
     private int rank;
     private int HighScore;
-    private int LastScore;
+    private string LastPlayed;
 
     private bool updating = false;
 
@@ -24,7 +24,7 @@ public class stats : MonoBehaviour {
         lostGames = 0;
         tiedGames = 0;
         HighScore = 0;
-        LastScore = 0;
+        LastPlayed = "";
         rank = 1;
         
 
@@ -43,7 +43,7 @@ public class stats : MonoBehaviour {
         lostGames = 0;
         tiedGames = 0;
         HighScore = 0;
-        LastScore = 0;
+        LastPlayed = "";
         rank = 1;
         updateRank(playerName);
     }
@@ -98,16 +98,18 @@ public class stats : MonoBehaviour {
             lostGames = int.Parse(eachStat[1]);
             tiedGames = int.Parse(eachStat[2]);
             HighScore = int.Parse(eachStat[3]);
-            LastScore = int.Parse(eachStat[4]);
+            LastPlayed = eachStat[4];
         }
         
         
-
+		playedGames = wonGames + lostGames + tiedGames;
     }
 
     /**
-    *when a match complete update the player record and forward the updated data.
-    */
+    when a match complete update the player record and forward the updated data.
+
+	UNUSED
+
     public void completeMatch(int winStatus, int xpEarned)
     {
 
@@ -134,6 +136,7 @@ public class stats : MonoBehaviour {
 
 
     }
+    */
 
     /**
     *returns the number of games won
@@ -178,9 +181,9 @@ public class stats : MonoBehaviour {
     /**
     *returns score from the last game played
     */
-    public int getLastScore()
+    public string getLastPlayed()
     {
-        return LastScore;
+        return LastPlayed;
     }
 
     /**
