@@ -4,7 +4,7 @@
  * This script handles transitions between build mode and race mode.
  * (De)activates components as necessary, detects transition criteria, and handles data transfers.
  *
- * Last update - 4/16/2016
+ * Last update - 4/18/2016
  */
 using UnityEngine;
 using UnityEngine.UI;
@@ -335,9 +335,9 @@ public class TransitionHandler : MonoBehaviour {
 		bTestTimeTitle.text = scoreKeeper.getPlayerName ().ToString() + "'s Test Time:";
 		bTestTime.text = scoreKeeper.getSelfTestTime().ToString() + "s";
 		aColumnDiff.text = (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime ()).ToString();
-		if (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime () >= 0) {
-			bColumnDiff.color = Color.red;
-		}
+		//if (scoreKeeper.getOpponentRaceTime () - scoreKeeper.getSelfTestTime () >= 0) {
+		//	bColumnDiff.color = Color.red;
+		//}
 
         float selfTime = (float)(scoreKeeper.getSelfRaceTime() - scoreKeeper.getOpponentTestTime());
 
@@ -348,6 +348,7 @@ public class TransitionHandler : MonoBehaviour {
 
         if (selfTime > opponentTime)
         {
+			bColumnDiff.color = Color.red;
             winner.text = scoreKeeper.getOpponentName() + " wins!";
             result = -1;
         }
@@ -355,6 +356,7 @@ public class TransitionHandler : MonoBehaviour {
         {
             winner.text = scoreKeeper.getPlayerName() + " wins!";
             result = 1;  
+			aColumnDiff.color = Color.red;
         }
         else {
             winner.text = "Draw!";

@@ -1,4 +1,4 @@
-Display,0,Full Screen
-Resolution,1,1280*800
-Quality,0,Low
+Display,1,Windowed
+Resolution,0,1280*720
+Quality,2,High
 Audio,0.2946987,something
