@@ -82,7 +82,7 @@ public class findMatchAutomatically : MonoBehaviour {
         //set up default game information
         playableGame hostGame = sessionData.GetComponent<playableGame>();
         hostGame.setBuildLimit(50);
-        hostGame.setBuildTime(120);
+        hostGame.setBuildTime(300);
         hostGame.setHost(player.getName());
         hostGame.establishHost(true);
         hostGame.setPass("");
@@ -94,7 +94,7 @@ public class findMatchAutomatically : MonoBehaviour {
         {
             //url with information attatched
             string url = "http://proj-309-38.cs.iastate.edu/php/creatematch.php?" + "sessionName=" + player.getName() + "DEF" + failCount + "&hostUser=" + player.getName() + "&buildTime=";
-            url = url + 120 + "&buildLimit=" + 50 + "&keywords=default" + "&pass=" + "&inviteOnly=" + "FALSE";
+            url = url + 300 + "&buildLimit=" + 50 + "&keywords=default" + "&pass=" + "&inviteOnly=" + "FALSE";
             //update gameName
             hostGame.setName(player.getName() + "DEF" + failCount);
             Debug.Log(url);
