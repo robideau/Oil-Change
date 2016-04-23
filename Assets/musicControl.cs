@@ -4,9 +4,16 @@ using System.Collections;
 public class musicControl : MonoBehaviour {
 
 	private GameObject currentSong;
+	private bool isPlaying;
+	private static musicControl _this;
 
 	void Awake()
 	{
+		if(!_this)
+			_this = this;
+		else
+			Destroy(this.gameObject);
+
 		DontDestroyOnLoad(this.gameObject);
 	}
 
