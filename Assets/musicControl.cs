@@ -5,6 +5,10 @@ public class musicControl : MonoBehaviour {
 
 	private GameObject currentSong;
 
+	void Awake()
+	{
+		DontDestroyOnLoad(this.gameObject);
+	}
 
 	// Use this for initialization
 	void Start () {
