@@ -3,7 +3,7 @@
  * 
  * ObjectController manages prefab instantiation and placement in build mode.
  *
- * Last update - 4/4/2016
+ * Last update - 4/24/2016
  */
 
 using UnityEngine;
@@ -22,7 +22,8 @@ public class ObjectController : MonoBehaviour {
 	public Text buildLimitCounter;
 	public ModularChat chat;
 	public testButtonClicked tbscript;
-	public bool isFinishPlaced;
+	private bool isFinishPlaced;
+	private bool isStartPlaced;
 
 	private GameObject currentObject;
 	private bool buildMenuTestDir;
@@ -45,6 +46,7 @@ public class ObjectController : MonoBehaviour {
 		buildLimit = GameObject.Find ("SessionData").GetComponent<playableGame> ().getBuildLimit ();
 		updateBuildCounterText ();
 		isFinishPlaced = false;
+		isStartPlaced = false;
 	}
 
 	// Update is called once per frame
@@ -61,14 +63,38 @@ public class ObjectController : MonoBehaviour {
 				}
 			}
 			// Place object
-			if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && !isFinishPlaced)
+			if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 			{
 				if(currentObject.tag == "Finish")
-					isFinishPlaced = true;
-				currentObject = null;
-				newPiecePlaced = true;
-				updateBuildCounterText ();
-				chat.enableInput ();
+				{
+					if(!isFinishPlaced)
+					{
+						isFinishPlaced = true;
+						currentObject = null;
+						newPiecePlaced = true;
+						updateBuildCounterText ();
+						chat.enableInput ();
+					}
+				}
+				else if(currentObject.tag == "Start")
+				{
+					if(!isStartPlaced)
+					{
+						isStartPlaced = true;
+						currentObject = null;
+						newPiecePlaced = true;
+						updateBuildCounterText ();
+						chat.enableInput ();	
+					}
+
+				}
+				else
+				{
+					currentObject = null;
+					newPiecePlaced = true;
+					updateBuildCounterText ();
+					chat.enableInput ();
+				}
 			}
 			// Delete object
 			if((Input.GetMouseButtonDown(2) || Input.GetKey("delete")) && !EventSystem.current.IsPointerOverGameObject())
@@ -81,8 +107,10 @@ public class ObjectController : MonoBehaviour {
 						Destroy(hit.collider.gameObject);
 						buildCount--;
 						updateBuildCounterText ();
-						if(hitTag =="Finish")
+						if(hitTag == "Finish")
 							isFinishPlaced = false;
+						else if(hitTag == "Start")
+							isStartPlaced = false;
 					}
 					else if(hitTag == "ParentedBuildObject")
 					{
