@@ -268,7 +268,6 @@ public class TransitionHandler : MonoBehaviour {
 	private IEnumerator raceMode() {
 		//Replicate track
 		replicator.replicateTrack(trackData);
-		yield return new WaitForSeconds (3);
 
 		//Relocate car to start point, set active
 		gameTracker.playerCar.SetActive(true);
