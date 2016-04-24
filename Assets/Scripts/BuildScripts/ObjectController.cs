@@ -22,6 +22,7 @@ public class ObjectController : MonoBehaviour {
 	public Text buildLimitCounter;
 	public ModularChat chat;
 	public testButtonClicked tbscript;
+	public bool isFinishPlaced;
 
 	private GameObject currentObject;
 	private bool buildMenuTestDir;
@@ -43,6 +44,7 @@ public class ObjectController : MonoBehaviour {
 
 		buildLimit = GameObject.Find ("SessionData").GetComponent<playableGame> ().getBuildLimit ();
 		updateBuildCounterText ();
+		isFinishPlaced = false;
 	}
 
 	// Update is called once per frame
@@ -59,8 +61,10 @@ public class ObjectController : MonoBehaviour {
 				}
 			}
 			// Place object
-			if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+			if(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject() && !isFinishPlaced)
 			{
+				if(currentObject.tag == "Finish")
+					isFinishPlaced = true;
 				currentObject = null;
 				newPiecePlaced = true;
 				updateBuildCounterText ();
@@ -77,6 +81,8 @@ public class ObjectController : MonoBehaviour {
 						Destroy(hit.collider.gameObject);
 						buildCount--;
 						updateBuildCounterText ();
+						if(hitTag =="Finish")
+							isFinishPlaced = false;
 					}
 					else if(hitTag == "ParentedBuildObject")
 					{
