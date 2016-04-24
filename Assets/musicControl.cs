@@ -33,6 +33,7 @@ public class musicControl : MonoBehaviour {
 		currentSong.SetActive(false);
 		int folderSongCount = transform.childCount;
 		currentSong = transform.GetChild(Random.Range(0, folderSongCount)).gameObject;
+		Invoke("changeSong", currentSong.GetComponent<AudioSource>().clip.length);
 		currentSong.SetActive(true);
 	}
 }
