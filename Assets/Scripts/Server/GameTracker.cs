@@ -90,6 +90,7 @@ public class GameTracker : MonoBehaviour {
 
 	//Trigger countdown - start timer once countdown is completed
 	public IEnumerator countdown() {
+		playerCar.GetComponent<PlayerCarController> ().enabled = false;
 		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
 		timerText.text = "3...";
 		yield return new WaitForSeconds (1);
@@ -99,6 +100,7 @@ public class GameTracker : MonoBehaviour {
 		yield return new WaitForSeconds (1);
 		startTimer ();
 		playerCar.GetComponent<PlayerCarController> ().setMovementEnabled (false);
+		playerCar.GetComponent<PlayerCarController> ().enabled = true;
 	}
 
 	public void stopTimer() {
