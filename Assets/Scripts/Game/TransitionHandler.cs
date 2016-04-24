@@ -229,9 +229,10 @@ public class TransitionHandler : MonoBehaviour {
 		//Scan track, send data, clear scene
 		scanner.deleteOnScan = true;
 		StartCoroutine(dataSender.writeData());
-		yield return new WaitForSeconds (3);
+		yield return new WaitForSeconds (5);
 
 		trackData = dataSender.getReceivedData ();
+		yield return new WaitForSeconds (3);
 
 		//Deactivate build mode components
 		while (GameObject.FindGameObjectWithTag ("BuildObject") != null) {
