@@ -1,4 +1,4 @@
 Display,1,Windowed
 Resolution,1,1280*800
 Quality,2,High
-Audio,0,something
+Audio,0.1433824,something
