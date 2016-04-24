@@ -219,6 +219,13 @@ public class TransitionHandler : MonoBehaviour {
 			yield return new WaitForSeconds (1);
 		}
 
+		yield return new WaitForSeconds (0.5f);
+
+		if(buildStatus.text == "Opponent has forfeited.")
+		{
+			quitButton.OnClick();
+		}
+
 		//Scan track, send data, clear scene
 		scanner.deleteOnScan = true;
 		StartCoroutine(dataSender.writeData());
@@ -374,4 +381,13 @@ public class TransitionHandler : MonoBehaviour {
         WWW f_check = new WWW(post_url);
         yield return f_check;
     }
+
+	// For use with quit button or early exit cases with no score
+	public IEnumerator forwardPlayerStats(int result)
+	{
+		string name = accInfo.getName();
+		string post_url = "http://proj-309-38.cs.iastate.edu/php/updatestats.php?" + "username=" + WWW.EscapeURL(name) + "&result=" + result + "&score=";
+		WWW f_check = new WWW(post_url);
+		yield return f_check;
+	}
 }

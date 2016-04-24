@@ -39,7 +39,6 @@ public class QuitButton : MonoBehaviour {
 
 	public void forfeit() {
 		nv.RPC ("notifyOpponentOfQuit", RPCMode.All, null);
-		//TODO - update match wins/losses
 	}
 
 	[RPC] void notifyOpponentOfQuit() {
