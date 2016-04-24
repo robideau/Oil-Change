@@ -37,8 +37,13 @@ public class QuitButton : MonoBehaviour {
 		SceneManager.LoadScene("main screens");
 	}
 
+	public void forfeit() {
+		nv.RPC ("notifyOpponentOfQuit", RPCMode.All, null);
+		//TODO - update match wins/losses
+	}
+
 	[RPC] void notifyOpponentOfQuit() {
-		opponentStatusText.text = "Opponent has left match.";
+		opponentStatusText.text = "Opponent has forfeited.";
 		opponentStatusText.color = Color.yellow;
 	}
 

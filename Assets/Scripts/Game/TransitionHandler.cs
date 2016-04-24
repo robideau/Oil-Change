@@ -300,7 +300,8 @@ public class TransitionHandler : MonoBehaviour {
 
 	//To be executed if 1 or more players did not successfully submit before time up
 	private IEnumerator timeOut() {
-		yield return new WaitForSeconds (5);
+		quitButton.forfeit ();
+		yield return new WaitForSeconds (3);
 		quitButton.OnClick ();
 	}
 
